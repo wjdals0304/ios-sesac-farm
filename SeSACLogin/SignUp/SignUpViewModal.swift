@@ -17,9 +17,7 @@ class SignUpViewModal {
     func fetchSignUpAPI(completion: @escaping() -> Void ){
         
         APIServiceUser.signup(username: self.username.value, email: self.email.value, password: self.password.value) { userData, error in
-            print(userData)
-            print(error)
-            
+
             guard let userData = userData else {
                 return
             }
