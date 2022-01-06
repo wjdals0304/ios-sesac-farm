@@ -12,22 +12,24 @@ class PostViewController: UIViewController {
     let tableView = UITableView()
     
     private var viewModel = PostViewModel()
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.register(PostCell.self, forCellReuseIdentifier: "PostID")
         
         view.backgroundColor = .white
         setUpView()
         setUpViewConstraints()
         
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.register(PostCell.self, forCellReuseIdentifier: "PostCell")
+        
+        viewModel.post.bind { datas in
+            self.tableView.reloadData()
+        }
+        
         self.viewModel.getPost()
-        
-        print(self.viewModel.post.value)
-        
+    
     }
     
     func setUpView() {
@@ -47,24 +49,26 @@ class PostViewController: UIViewController {
 extension PostViewController : UITableViewDelegate , UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        return 5 
+        print(viewModel.post.value.count)
+        return viewModel.post.value.count
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        guard let cell = tableView.dequeueReusableCell(withIdentifier: "PostID") else {
-            return .init()
-        }
+
+        guard let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell") as? PostCell else { return .init() }
         
+        let data = viewModel.cellForRowAt(at: indexPath)
+        cell.nickNameLabel.text = "\(data.user.username)"
         
         return cell
-        
+
+        }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 200
     }
-    
-    
-    
     
 }
 
@@ -86,12 +90,8 @@ class PostCell : UITableViewCell {
         
         nickNameLabel.snp.makeConstraints { make in
             make.top.leading.equalTo(self.contentView.safeAreaLayoutGuide).offset(20)
-            
         }
-        
-        
-        
-        
+    
     }
     
     required init?(coder: NSCoder){

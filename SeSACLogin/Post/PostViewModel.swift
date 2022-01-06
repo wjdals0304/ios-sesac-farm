@@ -10,21 +10,27 @@ import Foundation
 
 class PostViewModel {
         
-
-    var post: Observable<Post> = Observable(Post(id: 0, text: "", user: User(jwt: "", user: UserClass(id: 0, username: "", email: "")), createdAt: "", updatedAt: "", comments: []))
+    var post: Observable<[Post]> = Observable([Post(id: 0, text: "", user: PostUser(id: 0, username: "", email: "", provider: "", confirmed: true, blocked: true, role: 0, createdAt: "", updatedAt: ""), createdAt: "", updatedAt: "", comments: [])])
     
-    func getPost() {
+    func getPost()  {
         
-        APIServicePost.getPost { postData, error in
-            print("postdata")
-            print(postData)
-            
-//            guard let postData = postData else {
-//                return
-//            }
-//            self.post.value = postData
-
+        APIServicePost.getPost { response , error in
+            self.post.value = response
         }
+                
     }
+    
+}
+
+extension PostViewModel {
+    
+    var numberOFRowInSection: Int {
+        return post.value.count
+    }
+    
+    func cellForRowAt(at indexPath: IndexPath) -> Post {
+        return post.value[indexPath.row]
+    }
+    
     
 }

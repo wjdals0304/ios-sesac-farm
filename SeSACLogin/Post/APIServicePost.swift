@@ -11,17 +11,15 @@ import Foundation
 
 class APIServicePost {
     
-    static func getPost( completion: @escaping ([Post?],APIError?) -> Void) {
+    static func getPost( completion: @escaping ([Post],APIError?) -> Void) {
     
         let url = URL(string: "http://test.monocoding.com:1231/posts")!
     
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         // string -> data,  dictionary -> Jsonserialization / codable
-        let jwt = UserDefaults.standard.object(forKey: "token") as! String
-        print("jwt")
-        print("Bearer " + jwt)
-        request.addValue("Bearer " + jwt, forHTTPHeaderField: "Authorization")
+        let jwt = UserDefaults.standard.object(forKey: "token") as! String        
+        request.setValue("Bearer " + jwt, forHTTPHeaderField: "Authorization")
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             
@@ -48,7 +46,6 @@ class APIServicePost {
             do {
                 let decoder = JSONDecoder()
                 let postData = try decoder.decode([Post].self, from: data)
-                print("post")
                 completion(postData,nil)
             } catch let error {
                 print("Got an error: \(error)")
