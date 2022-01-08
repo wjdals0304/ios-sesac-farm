@@ -12,12 +12,15 @@ class PostViewModel {
         
     var post: Observable<[Post]> = Observable([Post(id: 0, text: "", user: PostUser(id: 0, username: "", email: "", provider: "", confirmed: true, blocked: true, role: 0, createdAt: "", updatedAt: ""), createdAt: "", updatedAt: "", comments: [])])
     
-    func getPost()  {
+    func getPost(completion: @escaping( [Post] ) -> Void) {
         
         APIServicePost.getPost { response , error in
             self.post.value = response
+
+            completion(self.post.value)
         }
-                
+        
+        
     }
     
 }
