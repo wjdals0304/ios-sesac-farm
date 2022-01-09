@@ -12,6 +12,8 @@ class PostViewModel {
         
     var post: Observable<[Post]> = Observable([Post(id: 0, text: "", user: PostUser(id: 0, username: "", email: "", provider: "", confirmed: true, blocked: true, role: 0, createdAt: "", updatedAt: ""), createdAt: "", updatedAt: "", comments: [])])
     
+    var commnet : Observable<[CommentElement]> = Observable([CommentElement(id: 0, comment: "", user: PostUser(id: 0, username: "", email: "", provider: "", confirmed: true, blocked: true, role: 0, createdAt: "", updatedAt: ""), createdAt: "", updatedAt: "")])
+    
     func getPost(completion: @escaping( [Post] ) -> Void) {
         
         APIServicePost.getPost { response , error in

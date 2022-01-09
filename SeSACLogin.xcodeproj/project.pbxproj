@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		644C4251278A75C500D912F2 /* PostDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644C4250278A75C400D912F2 /* PostDetailViewController.swift */; };
+		644C4253278ADA3800D912F2 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 644C4252278ADA3700D912F2 /* Comment.swift */; };
 		645C56C32785795B0016B135 /* PostViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 645C56C22785795B0016B135 /* PostViewModel.swift */; };
 		645C56C727857D180016B135 /* APIServicePost.swift in Sources */ = {isa = PBXBuildFile; fileRef = 645C56C627857D180016B135 /* APIServicePost.swift */; };
 		645C56C927857E0F0016B135 /* Post.swift in Sources */ = {isa = PBXBuildFile; fileRef = 645C56C827857E0F0016B135 /* Post.swift */; };
@@ -30,6 +31,7 @@
 
 /* Begin PBXFileReference section */
 		644C4250278A75C400D912F2 /* PostDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostDetailViewController.swift; sourceTree = "<group>"; };
+		644C4252278ADA3700D912F2 /* Comment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
 		645C56C22785795B0016B135 /* PostViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewModel.swift; sourceTree = "<group>"; };
 		645C56C627857D180016B135 /* APIServicePost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIServicePost.swift; sourceTree = "<group>"; };
 		645C56C827857E0F0016B135 /* Post.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Post.swift; sourceTree = "<group>"; };
@@ -80,6 +82,7 @@
 				644C4250278A75C400D912F2 /* PostDetailViewController.swift */,
 				645C56C627857D180016B135 /* APIServicePost.swift */,
 				645C56C827857E0F0016B135 /* Post.swift */,
+				644C4252278ADA3700D912F2 /* Comment.swift */,
 			);
 			path = Post;
 			sourceTree = "<group>";
@@ -217,6 +220,7 @@
 				648B8ED92784410300742480 /* PostViewController.swift in Sources */,
 				648B8ED427843A2100742480 /* StartViewController.swift in Sources */,
 				648B8EA92782DEEA00742480 /* AppDelegate.swift in Sources */,
+				644C4253278ADA3800D912F2 /* Comment.swift in Sources */,
 				648B8EAB2782DEEA00742480 /* SceneDelegate.swift in Sources */,
 				648B8ECE2784338B00742480 /* SignUpViewModal.swift in Sources */,
 				648B8EC82784226600742480 /* SignUpViewController.swift in Sources */,
