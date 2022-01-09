@@ -68,21 +68,19 @@ extension PostViewController : UITableViewDelegate , UITableViewDataSource {
         cell.titleTextLabel.text = "\(data.text)"
         
         let dateFormatter = DateFormatter()
-        dateFormatter.locale = Locale(identifier: "en_US_POSIX")
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssXXXXX"
+        dateFormatter.dateFormat = "YYYY-MM-dd'T'HH:mm:ss.SSSZ"
+        dateFormatter.timeZone = NSTimeZone(name: "ko_KR") as TimeZone?
         
-//        var createDateString = ""
+        let createDate = dateFormatter.date(from: data.createdAt)!
         
-        if let date = dateFormatter.date(from: data.createdAt) {
-            dateFormatter.dateFormat = "MM/dd"
-            let createDateString = dateFormatter.string(from: date)
-            print(createDateString)
-        }
-//        print(data.createdAt)
-        let convertDate = dateFormatter.date(from: "")
+        dateFormatter.dateFormat = "MM/dd"
+        cell.createDateLabel.text = "\(dateFormatter.string(from: createDate))"
         
-        cell.createDateLabel.text = "\(String(describing: convertDate))"
-        
+        let commentCount = data.comments.count
+    
+        cell.commentWriteLabel.text = commentCount == 0 ? "댓글쓰기" : "댓글 \(commentCount)"
+            
+//
         return cell
 
     }
@@ -91,6 +89,14 @@ extension PostViewController : UITableViewDelegate , UITableViewDataSource {
         return 200
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+            
+        let postData = postArray[indexPath.row]
+        let vc = PostDetailViewController(postData: postData)
+        
+        navigationController?.pushViewController(vc, animated: true)
+        
+        }
     
     
 }
@@ -102,12 +108,12 @@ class PostCell : UITableViewCell {
     let titleTextLabel = UILabel()
     let createDateLabel = UILabel()
     let lineView = UIView()
-    let commentWriteButton = UIButton()
+    let commentWriteLabel = UILabel()
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        [nickNameLabel,titleTextLabel,createDateLabel,lineView,commentWriteButton].forEach {
+        [nickNameLabel,titleTextLabel,createDateLabel,lineView,commentWriteLabel].forEach {
             contentView.addSubview($0)
         }
         
@@ -129,12 +135,15 @@ class PostCell : UITableViewCell {
         lineView.snp.makeConstraints { make in
             make.top.equalTo(createDateLabel.snp.bottom).offset(20)
             make.leading.trailing.equalToSuperview()
+            make.height.equalTo(2)
+            
         }
-        commentWriteButton.snp.makeConstraints { make in
-            make.top.equalTo(lineView.snp.bottom).offset(20)
+        lineView.backgroundColor = .gray
+
+        commentWriteLabel.snp.makeConstraints { make in
+            make.top.equalTo(lineView.snp.bottom).offset(5)
             make.leading.equalTo(titleTextLabel)
         }
-        
     
     }
     
