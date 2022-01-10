@@ -12,6 +12,10 @@ import SnapKit
 class PostDetailViewController : UIViewController {
     
     private let postData : Post
+    private var commentArray : [CommentElement] = []
+    
+    private var viewModel = PostViewModel()
+    
     
     let scrollView : UIScrollView = {
         let scrollView = UIScrollView()
@@ -21,7 +25,12 @@ class PostDetailViewController : UIViewController {
     }()
     
     let contentView = UIView()
-    let mainTextView = UIView()
+    let mainTextView : UIView  = {
+        let view = UIView()
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor.gray.cgColor
+        return view
+    }()
 
     let userNameLabel = UILabel()
     let createDateLabel = UILabel()
@@ -29,14 +38,16 @@ class PostDetailViewController : UIViewController {
     
     let lineView1 : UIView = {
         let view = UIView()
-        view.backgroundColor = .gray
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor.gray.cgColor
         return view
     }()
     
     
     let lineView2 : UIView = {
         let view = UIView()
-        view.backgroundColor = .gray
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor.gray.cgColor
         return view
     }()
     
@@ -58,10 +69,32 @@ class PostDetailViewController : UIViewController {
          
         setUp()
         setUpConstraint()
+        setUpData()
+        
+        self.viewModel.getComment(id: String(postData.id)) {
+            [weak self] response in
+            DispatchQueue.main.async {
+                self?.commentArray = response
+                self?.commentTableView.reloadData()
+            }
+        }
+        
+    
+    }
+    
+    init(postData: Post) {
+        self.postData = postData
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    
+    func setUpData() {
         
         self.commentTableView.register(PostDetailCell.self, forCellReuseIdentifier: "PostDetailCell")
-        
-        
         self.userNameLabel.text = "\(postData.user.username)"
         
         let dateFormatter = DateFormatter()
@@ -80,15 +113,6 @@ class PostDetailViewController : UIViewController {
         
     }
     
-    init(postData: Post) {
-        self.postData = postData
-        super.init(nibName: nil, bundle: nil)
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     
     func setUp() {
         self.view.backgroundColor = .systemBackground
@@ -105,6 +129,8 @@ class PostDetailViewController : UIViewController {
         }
         
      }
+    
+    
     
     func setUpConstraint() {
         
@@ -154,16 +180,12 @@ class PostDetailViewController : UIViewController {
             make.leading.equalToSuperview().offset(20)
         }
         
-        
         commentTableView.snp.makeConstraints { make in
             make.top.equalTo(mainTextView.snp.bottom)
             make.leading.trailing.equalToSuperview()
             make.height.equalTo(2000)
-
             make.bottom.equalToSuperview()
         }
-            
-        
     }
     
 }
@@ -172,16 +194,16 @@ class PostDetailViewController : UIViewController {
 extension PostDetailViewController : UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 20
+        return commentArray.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "PostDetailCell") as? PostDetailCell else { return .init() }
         
-        let data = postData.comments[indexPath.row]
+        let data = commentArray[indexPath.row]
         
-        cell.nickNameLabel.text = "ddd"
+        cell.nickNameLabel.text = "\(data.user.username)"
         cell.commentTextLabel.text = "\(data.comment)"
         
         return cell
@@ -190,7 +212,6 @@ extension PostDetailViewController : UITableViewDataSource, UITableViewDelegate 
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100 
     }
-
     
 }
 
@@ -212,7 +233,7 @@ class PostDetailCell: UITableViewCell {
             
         }
         commentTextLabel.snp.makeConstraints { make in
-            make.top.equalTo(nickNameLabel).offset(10)
+            make.top.equalTo(nickNameLabel).offset(20)
             make.leading.equalToSuperview().offset(20)
         }
         

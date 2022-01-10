@@ -11,6 +11,16 @@ class PostViewController: UIViewController {
     
     let tableView = UITableView()
     
+    let addButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "plus"), for: .normal)
+        button.tintColor  = UIColor.white
+        button.backgroundColor = .green
+        button.layer.cornerRadius = 20
+        button.addTarget(self, action: #selector(addPostClicked), for: .touchUpInside)
+        return button
+    }()
+    
     private var viewModel = PostViewModel()
     private var postArray : [Post] = []
     
@@ -36,15 +46,30 @@ class PostViewController: UIViewController {
     
     func setUpView() {
         view.addSubview(tableView)
+        view.addSubview(addButton)
     }
     
     func setUpViewConstraints() {
       
         tableView.snp.makeConstraints { make in
             make.edges.equalToSuperview()
-            
+        }
+        
+        addButton.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().inset(60)
+            make.bottom.equalToSuperview().inset(60)
+            make.height.equalTo(60)
+            make.width.equalTo(60)
         }
     }
+    
+    
+    @objc func addPostClicked() {
+        
+        let vc = PostUpdateViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
     
 }
 
@@ -80,7 +105,6 @@ extension PostViewController : UITableViewDelegate , UITableViewDataSource {
     
         cell.commentWriteLabel.text = commentCount == 0 ? "댓글쓰기" : "댓글 \(commentCount)"
             
-//
         return cell
 
     }
@@ -96,7 +120,7 @@ extension PostViewController : UITableViewDelegate , UITableViewDataSource {
         
         navigationController?.pushViewController(vc, animated: true)
         
-        }
+    }
     
     
 }

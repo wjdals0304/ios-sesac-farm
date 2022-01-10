@@ -56,7 +56,7 @@ class APIServicePost {
         }.resume()
     }
     
-    static func getComment(id: String ,completion: @escaping ([Comment],APIError?) -> Void) {
+    static func getComment(id: String ,completion: @escaping ([CommentElement],APIError?) -> Void) {
     
         let url = URL(string: "http://test.monocoding.com:1231/comments?post=\(id)")!
     
@@ -90,7 +90,7 @@ class APIServicePost {
 
             do {
                 let decoder = JSONDecoder()
-                let commentData = try decoder.decode([Comment].self, from: data)
+                let commentData = try decoder.decode([CommentElement].self, from: data)
                     completion(commentData,nil)
             } catch let error {
                 print("Got an error: \(error)")
@@ -101,6 +101,7 @@ class APIServicePost {
         }.resume()
     }
 
+    
     
 }
 
