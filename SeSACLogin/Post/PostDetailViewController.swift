@@ -13,9 +13,8 @@ class PostDetailViewController : UIViewController {
     
     private let postData : Post
     private var commentArray : [CommentElement] = []
-    
-    private var viewModel = PostViewModel()
-    
+    private var postViewModel = PostViewModel()
+    private var commentViewModel = CommentViewModel()
     
     let scrollView : UIScrollView = {
         let scrollView = UIScrollView()
@@ -51,8 +50,34 @@ class PostDetailViewController : UIViewController {
         return view
     }()
     
-    
     let commentLabel = UILabel()
+    
+    let textView : UIView = {
+        let view = UIView()
+        view.backgroundColor = .systemBackground
+        view.layer.borderWidth = 1
+        
+        return view
+    }()
+    
+    let commentTextField : UITextField = {
+        let textField = UITextField()
+        textField.backgroundColor = .lightGray
+        textField.placeholder = "댓글을 입력해주세요."
+        textField.layer.cornerRadius = 10
+        return textField
+    }()
+    
+    let addCommentButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "plus"), for: .normal)
+        button.tintColor  = UIColor.white
+        button.backgroundColor = .green
+        button.layer.cornerRadius = 20
+        button.addTarget(self, action: #selector(addCommentClicked), for: .touchUpInside)
+        
+        return button
+    }()
     
     lazy private var commentTableView : UITableView = {
        let tableView = UITableView()
@@ -71,13 +96,14 @@ class PostDetailViewController : UIViewController {
         setUpConstraint()
         setUpData()
         
-        self.viewModel.getComment(id: String(postData.id)) {
+        self.commentViewModel.getComment(id: String(postData.id)) {
             [weak self] response in
             DispatchQueue.main.async {
                 self?.commentArray = response
                 self?.commentTableView.reloadData()
             }
         }
+        
         
     
     }
@@ -124,9 +150,13 @@ class PostDetailViewController : UIViewController {
         self.contentView.addSubview(mainTextView)
         self.contentView.addSubview(commentTableView)
         
-        [userNameLabel,createDateLabel, titleTextLabel,lineView1,lineView2,commentLabel ].forEach {
+        [userNameLabel,createDateLabel, titleTextLabel,lineView1,lineView2,commentLabel ,commentTextField].forEach {
             self.mainTextView.addSubview($0)
         }
+        
+        self.contentView.addSubview(textView)
+        self.textView.addSubview(commentTextField)
+        self.textView.addSubview(addCommentButton)
         
      }
     
@@ -186,6 +216,35 @@ class PostDetailViewController : UIViewController {
             make.height.equalTo(2000)
             make.bottom.equalToSuperview()
         }
+        
+        textView.snp.makeConstraints { make in
+            make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
+            make.height.equalTo(60)
+        }
+        
+        commentTextField.snp.makeConstraints { make in
+            make.leading.equalTo(textView.safeAreaLayoutGuide).offset(20)
+            make.trailing.equalTo(textView.safeAreaLayoutGuide).inset(20)
+            make.height.equalTo(textView).multipliedBy(0.8)
+        }
+        
+        addCommentButton.snp.makeConstraints { make in
+            make.trailing.equalTo(commentTextField.snp.trailing).inset(5)
+            make.height.equalTo(commentTextField).multipliedBy(0.8)
+            make.width.equalTo(commentTextField).multipliedBy(0.1)
+        }
+        
+    }
+    
+    @objc func addCommentClicked() {
+        
+        commentViewModel.saveComment(id: String(postData.id), comment: commentTextField.text! ) { comment in
+            DispatchQueue.main.async { [weak self] in
+                self?.commentTableView.reloadData()
+            }
+        }
+        
     }
     
 }

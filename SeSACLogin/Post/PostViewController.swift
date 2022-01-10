@@ -28,6 +28,9 @@ class PostViewController: UIViewController {
         super.viewDidLoad()
         
         view.backgroundColor = .white
+        navigationItem.title = "새싹농장"
+        navigationController?.navigationBar.prefersLargeTitles = true
+
         setUpView()
         setUpViewConstraints()
         
@@ -68,6 +71,12 @@ class PostViewController: UIViewController {
         
         let vc = PostUpdateViewController()
         navigationController?.pushViewController(vc, animated: true)
+        
+//        let nav = UINavigationController(rootViewController: vc)
+//        nav.modalPresentationStyle = .fullScreen
+//        self.present(vc, animated: true, completion: nil)
+            
+        
     }
     
     

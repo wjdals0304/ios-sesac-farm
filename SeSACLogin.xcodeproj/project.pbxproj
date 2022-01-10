@@ -28,6 +28,8 @@
 		648B8ED427843A2100742480 /* StartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B8ED327843A2100742480 /* StartViewController.swift */; };
 		648B8ED92784410300742480 /* PostViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B8ED82784410300742480 /* PostViewController.swift */; };
 		648B8EDB27847C8800742480 /* LoginViewModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B8EDA27847C8800742480 /* LoginViewModal.swift */; };
+		6495F8C4278C66B700A9F6E0 /* APIServiceComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6495F8C3278C66B700A9F6E0 /* APIServiceComment.swift */; };
+		6495F8C6278C66F300A9F6E0 /* CommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6495F8C5278C66F300A9F6E0 /* CommentViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +55,8 @@
 		648B8ED327843A2100742480 /* StartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartViewController.swift; sourceTree = "<group>"; };
 		648B8ED82784410300742480 /* PostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PostViewController.swift; sourceTree = "<group>"; };
 		648B8EDA27847C8800742480 /* LoginViewModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModal.swift; sourceTree = "<group>"; };
+		6495F8C3278C66B700A9F6E0 /* APIServiceComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIServiceComment.swift; sourceTree = "<group>"; };
+		6495F8C5278C66F300A9F6E0 /* CommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,10 +84,12 @@
 			isa = PBXGroup;
 			children = (
 				645C56C22785795B0016B135 /* PostViewModel.swift */,
+				6495F8C5278C66F300A9F6E0 /* CommentViewModel.swift */,
 				648B8ED82784410300742480 /* PostViewController.swift */,
 				644C4250278A75C400D912F2 /* PostDetailViewController.swift */,
 				644C42B0278C16A000D912F2 /* PostUpdateViewController.swift */,
 				645C56C627857D180016B135 /* APIServicePost.swift */,
+				6495F8C3278C66B700A9F6E0 /* APIServiceComment.swift */,
 				645C56C827857E0F0016B135 /* Post.swift */,
 				644C4252278ADA3700D912F2 /* Comment.swift */,
 			);
@@ -212,6 +218,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6495F8C4278C66B700A9F6E0 /* APIServiceComment.swift in Sources */,
 				645C56C727857D180016B135 /* APIServicePost.swift in Sources */,
 				648B8EC02782E13D00742480 /* LoginViewController.swift in Sources */,
 				648B8ECC27842D5100742480 /* APIServiceUser.swift in Sources */,
@@ -220,6 +227,7 @@
 				648B8ED02784357D00742480 /* Observable.swift in Sources */,
 				645C56C927857E0F0016B135 /* Post.swift in Sources */,
 				645C56C32785795B0016B135 /* PostViewModel.swift in Sources */,
+				6495F8C6278C66F300A9F6E0 /* CommentViewModel.swift in Sources */,
 				644C4251278A75C500D912F2 /* PostDetailViewController.swift in Sources */,
 				648B8ED92784410300742480 /* PostViewController.swift in Sources */,
 				648B8ED427843A2100742480 /* StartViewController.swift in Sources */,

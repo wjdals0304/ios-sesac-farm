@@ -11,13 +11,16 @@ import UIKit
 
 class PostUpdateViewController : UIViewController {
     
+    
+    let viewModel = PostViewModel()
+    
     lazy var completeBarButton: UIBarButtonItem = {
         let barButtonItem =
         UIBarButtonItem(title: "완료", style: .plain, target: self, action: #selector(didCompleteButtonClicked(_:)))
         return barButtonItem
     }()
     
-    var backBarButton : UIBarButtonItem = {
+    lazy var backBarButton : UIBarButtonItem = {
         let barButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(closeButtonClicked))
         return barButtonItem
     }()
@@ -25,26 +28,30 @@ class PostUpdateViewController : UIViewController {
     var textView = UITextView()
     
     override func viewDidLoad() {
+    
         super.viewDidLoad()
         setup()
         setUpConstraint()
     }
     
     @objc func closeButtonClicked(){
-        //dismiss 제대로 동작 x
-//        self.dismiss(animated: true, completion: nil)
-        let vc = PostViewController()
-        navigationController?.pushViewController(vc, animated: true)
-        
+        self.navigationController?.popViewController(animated: true)
     }
     
     @objc func didCompleteButtonClicked(_ sender: UIBarButtonItem) {
         
-        
+        viewModel.savePost(text: textView.text) { response in
+            
+            self.dismiss(animated: true, completion: nil)
 
+        }
+        
     }
  
     func setup(){
+        
+        navigationItem.title = "새싹농장 글쓰기"
+        view.backgroundColor = .systemBackground
         navigationItem.rightBarButtonItem = completeBarButton
         navigationItem.leftBarButtonItem = backBarButton
         
@@ -54,7 +61,7 @@ class PostUpdateViewController : UIViewController {
     func setUpConstraint() {
         
         textView.snp.makeConstraints { make in
-            make.edges.equalTo(view.safeAreaLayoutGuide)
+            make.edges.equalToSuperview()
             
         }
         
