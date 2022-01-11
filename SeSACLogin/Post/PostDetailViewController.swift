@@ -56,7 +56,6 @@ class PostDetailViewController : UIViewController {
         let view = UIView()
         view.backgroundColor = .systemBackground
         view.layer.borderWidth = 1
-        
         return view
     }()
     
@@ -75,7 +74,6 @@ class PostDetailViewController : UIViewController {
         button.backgroundColor = .green
         button.layer.cornerRadius = 20
         button.addTarget(self, action: #selector(addCommentClicked), for: .touchUpInside)
-        
         return button
     }()
     
@@ -103,9 +101,7 @@ class PostDetailViewController : UIViewController {
                 self?.commentTableView.reloadData()
             }
         }
-        
-        
-    
+            
     }
     
     init(postData: Post) {
@@ -244,7 +240,6 @@ class PostDetailViewController : UIViewController {
                 self?.commentTableView.reloadData()
             }
         }
-        
     }
     
 }
@@ -265,12 +260,34 @@ extension PostDetailViewController : UITableViewDataSource, UITableViewDelegate 
         cell.nickNameLabel.text = "\(data.user.username)"
         cell.commentTextLabel.text = "\(data.comment)"
         
+        cell.showAlertAction = { [ unowned self] in
+            self.showAlert()
+        }
+        
         return cell
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 100 
     }
+    
+    
+    func showAlert() {
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let update = UIAlertAction(title: "수정", style: .default) { UIAlertAction in
+            print("수정")
+        }
+        let cancel = UIAlertAction(title: "닫기", style: .cancel, handler: nil)
+        let destructive = UIAlertAction(title: "삭제", style: .destructive, handler: nil)
+
+        alert.addAction(update)
+        alert.addAction(cancel)
+        alert.addAction(destructive)
+
+       self.present(alert, animated: true, completion: nil)
+    }
+    
+    
     
 }
 
@@ -279,11 +296,20 @@ class PostDetailCell: UITableViewCell {
     
     let nickNameLabel = UILabel()
     let commentTextLabel = UILabel()
+    let updateButton : UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "ellipsis"),for: .normal )
+        button.tintColor = .gray
+        button.transform = CGAffineTransform(rotationAngle: -CGFloat.pi / 2)
+        return button
+    }()
+    
+    var showAlertAction : (() -> ())?
     
     override init(style: UITableViewCell.CellStyle ,reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        [nickNameLabel,commentTextLabel].forEach {
+        [nickNameLabel,commentTextLabel,updateButton].forEach {
             contentView.addSubview($0)
         }
         
@@ -295,11 +321,19 @@ class PostDetailCell: UITableViewCell {
             make.top.equalTo(nickNameLabel).offset(20)
             make.leading.equalToSuperview().offset(20)
         }
-        
+        updateButton.snp.makeConstraints { make in
+            make.trailing.equalToSuperview().inset(20)
+            make.top.equalToSuperview().offset(20)
+        }
+        self.updateButton.addTarget(self, action: #selector(showAlertClicked), for: .touchUpInside)
     }
     
     required init?(coder: NSCoder){
         fatalError("init(coder: has not been implemented")
+    }
+    
+    @objc func showAlertClicked(){
+        showAlertAction?()
     }
     
 }
