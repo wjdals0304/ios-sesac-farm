@@ -26,6 +26,7 @@ class PostUpdateViewController : UIViewController {
     }()
     
     var textView = UITextView()
+  
     
     override func viewDidLoad() {
     
@@ -43,13 +44,12 @@ class PostUpdateViewController : UIViewController {
         viewModel.savePost(text: textView.text) { response in
             
             self.dismiss(animated: true, completion: nil)
-
         }
         
     }
  
     func setup(){
-        
+           
         navigationItem.title = "새싹농장 글쓰기"
         view.backgroundColor = .systemBackground
         navigationItem.rightBarButtonItem = completeBarButton

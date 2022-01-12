@@ -30,6 +30,7 @@
 		648B8EDB27847C8800742480 /* LoginViewModal.swift in Sources */ = {isa = PBXBuildFile; fileRef = 648B8EDA27847C8800742480 /* LoginViewModal.swift */; };
 		6495F8C4278C66B700A9F6E0 /* APIServiceComment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6495F8C3278C66B700A9F6E0 /* APIServiceComment.swift */; };
 		6495F8C6278C66F300A9F6E0 /* CommentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6495F8C5278C66F300A9F6E0 /* CommentViewModel.swift */; };
+		6495F8C8278D859500A9F6E0 /* CommentUpdateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6495F8C7278D859500A9F6E0 /* CommentUpdateViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -57,6 +58,7 @@
 		648B8EDA27847C8800742480 /* LoginViewModal.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModal.swift; sourceTree = "<group>"; };
 		6495F8C3278C66B700A9F6E0 /* APIServiceComment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIServiceComment.swift; sourceTree = "<group>"; };
 		6495F8C5278C66F300A9F6E0 /* CommentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentViewModel.swift; sourceTree = "<group>"; };
+		6495F8C7278D859500A9F6E0 /* CommentUpdateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommentUpdateViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -84,14 +86,11 @@
 			isa = PBXGroup;
 			children = (
 				645C56C22785795B0016B135 /* PostViewModel.swift */,
-				6495F8C5278C66F300A9F6E0 /* CommentViewModel.swift */,
 				648B8ED82784410300742480 /* PostViewController.swift */,
 				644C4250278A75C400D912F2 /* PostDetailViewController.swift */,
 				644C42B0278C16A000D912F2 /* PostUpdateViewController.swift */,
 				645C56C627857D180016B135 /* APIServicePost.swift */,
-				6495F8C3278C66B700A9F6E0 /* APIServiceComment.swift */,
 				645C56C827857E0F0016B135 /* Post.swift */,
-				644C4252278ADA3700D912F2 /* Comment.swift */,
 			);
 			path = Post;
 			sourceTree = "<group>";
@@ -115,6 +114,7 @@
 		648B8EA72782DEEA00742480 /* SeSACLogin */ = {
 			isa = PBXGroup;
 			children = (
+				6495F8C9278D85A000A9F6E0 /* Comment */,
 				645C56C527857A6E0016B135 /* Post */,
 				645C56C427857A460016B135 /* Login */,
 				648B8ED527843B1800742480 /* SignUp */,
@@ -139,6 +139,17 @@
 				648B8ECD2784338B00742480 /* SignUpViewModal.swift */,
 			);
 			path = SignUp;
+			sourceTree = "<group>";
+		};
+		6495F8C9278D85A000A9F6E0 /* Comment */ = {
+			isa = PBXGroup;
+			children = (
+				6495F8C5278C66F300A9F6E0 /* CommentViewModel.swift */,
+				6495F8C7278D859500A9F6E0 /* CommentUpdateViewController.swift */,
+				6495F8C3278C66B700A9F6E0 /* APIServiceComment.swift */,
+				644C4252278ADA3700D912F2 /* Comment.swift */,
+			);
+			path = Comment;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -233,6 +244,7 @@
 				648B8ED427843A2100742480 /* StartViewController.swift in Sources */,
 				648B8EA92782DEEA00742480 /* AppDelegate.swift in Sources */,
 				644C4253278ADA3800D912F2 /* Comment.swift in Sources */,
+				6495F8C8278D859500A9F6E0 /* CommentUpdateViewController.swift in Sources */,
 				648B8EAB2782DEEA00742480 /* SceneDelegate.swift in Sources */,
 				648B8ECE2784338B00742480 /* SignUpViewModal.swift in Sources */,
 				648B8EC82784226600742480 /* SignUpViewController.swift in Sources */,

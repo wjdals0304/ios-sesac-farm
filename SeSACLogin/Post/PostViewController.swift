@@ -43,7 +43,6 @@ class PostViewController: UIViewController {
                 self?.postArray =  response
                 self?.tableView.reloadData()
             }
-            
         }
     }
     
@@ -71,11 +70,6 @@ class PostViewController: UIViewController {
         
         let vc = PostUpdateViewController()
         navigationController?.pushViewController(vc, animated: true)
-        
-//        let nav = UINavigationController(rootViewController: vc)
-//        nav.modalPresentationStyle = .fullScreen
-//        self.present(vc, animated: true, completion: nil)
-            
         
     }
     

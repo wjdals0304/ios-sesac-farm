@@ -261,7 +261,7 @@ extension PostDetailViewController : UITableViewDataSource, UITableViewDelegate 
         cell.commentTextLabel.text = "\(data.comment)"
         
         cell.showAlertAction = { [ unowned self] in
-            self.showAlert()
+            self.showAlert(data: self.commentArray[indexPath.row])
         }
         
         return cell
@@ -272,13 +272,30 @@ extension PostDetailViewController : UITableViewDataSource, UITableViewDelegate 
     }
     
     
-    func showAlert() {
+    func showAlert(data : CommentElement) {
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let update = UIAlertAction(title: "수정", style: .default) { UIAlertAction in
-            print("수정")
+            let vc = CommentUpdateViewController(commentData: data)
+            self.navigationController?.pushViewController(vc, animated: true)
         }
+        
         let cancel = UIAlertAction(title: "닫기", style: .cancel, handler: nil)
-        let destructive = UIAlertAction(title: "삭제", style: .destructive, handler: nil)
+        
+        let destructive = UIAlertAction(title: "삭제", style: .destructive) { _ in
+            
+            let userId = UserDefaults.standard.integer(forKey: "id")
+            if userId == data.user.id {
+                self.commentViewModel.deleteComment(commentId: String(data.id)) { _ in
+                    DispatchQueue.main.async { [weak self] in
+                        self?.commentTableView.reloadData()
+                    }
+                }
+            } else {
+                print("본인이 작성한 글만 삭제할 수 있습니다.")
+            }
+            
+            
+        }
 
         alert.addAction(update)
         alert.addAction(cancel)
