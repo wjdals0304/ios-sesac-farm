@@ -14,9 +14,10 @@ class PostViewController: UIViewController {
     let addButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "plus"), for: .normal)
+        button.contentMode = .scaleToFill
         button.tintColor  = UIColor.white
-        button.backgroundColor = .green
-        button.layer.cornerRadius = 20
+        button.backgroundColor = UIColor().getCustomGreen()
+        button.layer.cornerRadius = 30
         button.addTarget(self, action: #selector(addPostClicked), for: .touchUpInside)
         return button
     }()
@@ -70,7 +71,6 @@ class PostViewController: UIViewController {
         
         let vc = PostUpdateViewController()
         navigationController?.pushViewController(vc, animated: true)
-        
     }
     
     
@@ -107,6 +107,9 @@ extension PostViewController : UITableViewDelegate , UITableViewDataSource {
         let commentCount = data.comments.count
     
         cell.commentWriteLabel.text = commentCount == 0 ? "댓글쓰기" : "댓글 \(commentCount)"
+        
+        cell.layer.borderWidth = 5
+        cell.layer.borderColor = UIColor().getCustomGray().cgColor
             
         return cell
 
@@ -124,18 +127,24 @@ extension PostViewController : UITableViewDelegate , UITableViewDataSource {
         navigationController?.pushViewController(vc, animated: true)
         
     }
-    
+   
     
 }
 
 
 class PostCell : UITableViewCell {
     
-    let nickNameLabel = UILabel()
+    let nickNameLabel: UILabel = {
+        let label = UILabel()
+        label.backgroundColor = UIColor().getCustomGray()
+        return label
+    }()
     let titleTextLabel = UILabel()
     let createDateLabel = UILabel()
     let lineView = UIView()
     let commentWriteLabel = UILabel()
+
+
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -147,6 +156,8 @@ class PostCell : UITableViewCell {
         nickNameLabel.snp.makeConstraints { make in
             make.top.leading.equalTo(self.contentView.safeAreaLayoutGuide).offset(20)
         }
+        
+        
         
         titleTextLabel.snp.makeConstraints { make in
             make.top.equalTo(nickNameLabel.snp.bottom).offset(20)
@@ -162,16 +173,18 @@ class PostCell : UITableViewCell {
         lineView.snp.makeConstraints { make in
             make.top.equalTo(createDateLabel.snp.bottom).offset(20)
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(2)
+            make.height.equalTo(1)
             
         }
-        lineView.backgroundColor = .gray
-
+        
+        lineView.backgroundColor = UIColor().getCustomGray()
         commentWriteLabel.snp.makeConstraints { make in
-            make.top.equalTo(lineView.snp.bottom).offset(5)
+            make.top.equalTo(lineView.snp.bottom).offset(10)
             make.leading.equalTo(titleTextLabel)
         }
     
+        
+        
     }
     
     required init?(coder: NSCoder){

@@ -46,7 +46,6 @@ class CommentUpdateViewController : UIViewController {
         navigationItem.leftBarButtonItem = backBarButton
         
         self.view.addSubview(textView)
-        
         self.textView.text = commentData.comment
     }
     
@@ -57,22 +56,22 @@ class CommentUpdateViewController : UIViewController {
             make.trailing.equalToSuperview().inset(30)
             make.height.equalTo(100)
         }
-        
     }
     
     @objc func closeButtonClicked(){
+        
         self.navigationController?.popViewController(animated: true)
+   
     }
     
     @objc func didCompleteButtonClicked(_ sender: UIBarButtonItem) {
           
         commentViewModel.updateComment(commentId: String(commentData.id)
-                                       , postId: String(commentData.post.id), comment: textView.text) { response in
-            print(response)
-            DispatchQueue.main.async { [weak self] in
+                                       , postId: String(commentData.post.id)
+                                       , comment: textView.text) { response in
+             DispatchQueue.main.async { [weak self] in
                 self?.navigationController?.popViewController(animated: true)
             }
-            
         }
         
         

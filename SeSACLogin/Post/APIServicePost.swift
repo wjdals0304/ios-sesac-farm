@@ -13,7 +13,7 @@ class APIServicePost {
     
     static func getPost( completion: @escaping ([Post],APIError?) -> Void) {
     
-        let url = URL(string: "http://test.monocoding.com:1231/posts")!
+        let url = URL(string: "http://test.monocoding.com:1231/posts?_sort=created_at:desc")!
     
         var request = URLRequest(url: url)
         request.httpMethod = "GET"

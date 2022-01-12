@@ -23,30 +23,36 @@ class PostDetailViewController : UIViewController {
         return scrollView
     }()
     
+    let updateButton : UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "ellipsis"),for: .normal )
+        button.tintColor = .gray
+        button.transform = CGAffineTransform(rotationAngle: -CGFloat.pi / 2)
+        button.addTarget(self, action: #selector(ellipsisClicked), for: .touchUpInside)
+        return button
+    }()
+    
+    
     let contentView = UIView()
     let mainTextView : UIView  = {
         let view = UIView()
         view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor.gray.cgColor
+        view.layer.borderColor = UIColor().getCustomGray().cgColor
         return view
     }()
 
-    let userNameLabel = UILabel()
+    let userNameLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 20)
+        return label
+    }()
     let createDateLabel = UILabel()
     let titleTextLabel = UILabel()
-    
-    let lineView1 : UIView = {
+
+    let titleTextView : UIView = {
         let view = UIView()
         view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor.gray.cgColor
-        return view
-    }()
-    
-    
-    let lineView2 : UIView = {
-        let view = UIView()
-        view.layer.borderWidth = 1
-        view.layer.borderColor = UIColor.gray.cgColor
+        view.layer.borderColor = UIColor().getCustomGray().cgColor
         return view
     }()
     
@@ -56,12 +62,13 @@ class PostDetailViewController : UIViewController {
         let view = UIView()
         view.backgroundColor = .systemBackground
         view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor().getCustomGray().cgColor
         return view
     }()
     
     let commentTextField : UITextField = {
         let textField = UITextField()
-        textField.backgroundColor = .lightGray
+        textField.backgroundColor = UIColor().getCustomGray()
         textField.placeholder = "댓글을 입력해주세요."
         textField.layer.cornerRadius = 10
         return textField
@@ -71,7 +78,7 @@ class PostDetailViewController : UIViewController {
         let button = UIButton()
         button.setImage(UIImage(systemName: "plus"), for: .normal)
         button.tintColor  = UIColor.white
-        button.backgroundColor = .green
+        button.backgroundColor = UIColor().getCustomGreen()
         button.layer.cornerRadius = 20
         button.addTarget(self, action: #selector(addCommentClicked), for: .touchUpInside)
         return button
@@ -89,7 +96,7 @@ class PostDetailViewController : UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-         
+       
         setUp()
         setUpConstraint()
         setUpData()
@@ -99,9 +106,12 @@ class PostDetailViewController : UIViewController {
             DispatchQueue.main.async {
                 self?.commentArray = response
                 self?.commentTableView.reloadData()
+                
+                self?.commentTableView.snp.makeConstraints { make in
+                    make.height.equalTo(100 * response.count + 200)
+                }
             }
         }
-            
     }
     
     init(postData: Post) {
@@ -129,7 +139,6 @@ class PostDetailViewController : UIViewController {
         self.createDateLabel.text = "\(dateFormatter.string(from: createDate))"
         self.titleTextLabel.text = "\(postData.text)"
 
-
         let commentCount = postData.comments.count
         self.commentLabel.text = commentCount == 0 ? "댓글쓰기" : "댓글 \(commentCount)"
         
@@ -140,23 +149,19 @@ class PostDetailViewController : UIViewController {
         self.view.backgroundColor = .systemBackground
         self.view.addSubview(scrollView)
         scrollView.addSubview(contentView)
-        
-//        _ = [mainTextView, commentTableView ].map { self.contentView.addSubview($0) }
-//
+
         self.contentView.addSubview(mainTextView)
         self.contentView.addSubview(commentTableView)
         
-        [userNameLabel,createDateLabel, titleTextLabel,lineView1,lineView2,commentLabel ,commentTextField].forEach {
+        [userNameLabel,createDateLabel,titleTextView,commentLabel,commentTextField].forEach {
             self.mainTextView.addSubview($0)
         }
-        
+        self.titleTextView.addSubview(titleTextLabel)
         self.contentView.addSubview(textView)
         self.textView.addSubview(commentTextField)
         self.textView.addSubview(addCommentButton)
         
      }
-    
-    
     
     func setUpConstraint() {
         
@@ -183,50 +188,46 @@ class PostDetailViewController : UIViewController {
             make.leading.equalToSuperview().offset(20)
         }
         
-        lineView1.snp.makeConstraints { make in
-            make.top.equalTo(createDateLabel).offset(20)
+        titleTextView.snp.makeConstraints { make in
+            make.top.equalTo(createDateLabel).offset(30)
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(2)
+            make.bottom.equalTo(commentLabel).inset(30)
         }
         
         titleTextLabel.snp.makeConstraints { make in
-            make.top.equalTo(lineView1).offset(20)
-            make.leading.equalToSuperview().offset(20)
-        }
-        
-        lineView2.snp.makeConstraints { make in
-            make.top.equalTo(titleTextLabel).offset(50)
-            make.leading.trailing.equalToSuperview()
-            make.height.equalTo(2)
-
+            make.top.equalTo(titleTextView).offset(10)
+            make.leading.equalTo(titleTextView).offset(20)
         }
         
         commentLabel.snp.makeConstraints { make in
-            make.top.equalTo(lineView2).offset(10)
             make.leading.equalToSuperview().offset(20)
+            make.bottom.equalToSuperview().inset(20)
+            
         }
-        
+
         commentTableView.snp.makeConstraints { make in
             make.top.equalTo(mainTextView.snp.bottom)
             make.leading.trailing.equalToSuperview()
-            make.height.equalTo(2000)
             make.bottom.equalToSuperview()
         }
         
         textView.snp.makeConstraints { make in
-            make.leading.trailing.equalTo(view.safeAreaLayoutGuide)
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
-            make.height.equalTo(60)
+            make.bottom.equalTo(scrollView.safeAreaLayoutGuide).offset(5)
+            make.trailing.equalTo(scrollView.safeAreaLayoutGuide)
+            make.leading.equalTo(scrollView.safeAreaLayoutGuide)
+            make.height.equalTo(100)
         }
         
         commentTextField.snp.makeConstraints { make in
+            make.top.equalTo(textView.safeAreaLayoutGuide).offset(20)
             make.leading.equalTo(textView.safeAreaLayoutGuide).offset(20)
             make.trailing.equalTo(textView.safeAreaLayoutGuide).inset(20)
-            make.height.equalTo(textView).multipliedBy(0.8)
+            make.height.equalTo(textView).multipliedBy(0.7)
         }
         
         addCommentButton.snp.makeConstraints { make in
-            make.trailing.equalTo(commentTextField.snp.trailing).inset(5)
+            make.trailing.equalTo(commentTextField.snp.trailing)
+            make.bottom.equalTo(commentTextField.snp.bottom).inset(5)
             make.height.equalTo(commentTextField).multipliedBy(0.8)
             make.width.equalTo(commentTextField).multipliedBy(0.1)
         }
@@ -240,6 +241,39 @@ class PostDetailViewController : UIViewController {
                 self?.commentTableView.reloadData()
             }
         }
+    }
+    
+    @objc func ellipsisClicked() {
+        
+        
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        let update = UIAlertAction(title: "수정", style: .default) { UIAlertAction in
+//            let vc = CommentUpdateViewController(commentData: data)
+//            self.navigationController?.pushViewController(vc, animated: true)
+        }
+        
+        let cancel = UIAlertAction(title: "닫기", style: .cancel, handler: nil)
+        
+        let destructive = UIAlertAction(title: "삭제", style: .destructive) { _ in
+            
+//            let userId = UserDefaults.standard.integer(forKey: "id")
+//            if userId == data.user.id {
+//                self.commentViewModel.deleteComment(commentId: String(data.id)) { _ in
+//                    DispatchQueue.main.async { [weak self] in
+//                        self?.commentTableView.reloadData()
+//                    }
+//                }
+//            } else {
+//                print("본인이 작성한 글만 삭제할 수 있습니다.")
+//            }
+            
+        }
+
+        alert.addAction(update)
+        alert.addAction(cancel)
+        alert.addAction(destructive)
+
+       self.present(alert, animated: true, completion: nil)
     }
     
 }
@@ -293,8 +327,6 @@ extension PostDetailViewController : UITableViewDataSource, UITableViewDelegate 
             } else {
                 print("본인이 작성한 글만 삭제할 수 있습니다.")
             }
-            
-            
         }
 
         alert.addAction(update)
@@ -303,16 +335,24 @@ extension PostDetailViewController : UITableViewDataSource, UITableViewDelegate 
 
        self.present(alert, animated: true, completion: nil)
     }
-    
-    
-    
+
 }
 
 
 class PostDetailCell: UITableViewCell {
     
-    let nickNameLabel = UILabel()
-    let commentTextLabel = UILabel()
+    let nickNameLabel : UILabel = {
+        let label = UILabel()
+        label.font = UIFont.boldSystemFont(ofSize: 15)
+        return label
+    }()
+    
+    let commentTextLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
+        return label
+    }()
     let updateButton : UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "ellipsis"),for: .normal )

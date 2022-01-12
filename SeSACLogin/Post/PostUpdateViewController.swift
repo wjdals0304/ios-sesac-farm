@@ -11,7 +11,6 @@ import UIKit
 
 class PostUpdateViewController : UIViewController {
     
-    
     let viewModel = PostViewModel()
     
     lazy var completeBarButton: UIBarButtonItem = {
@@ -35,6 +34,7 @@ class PostUpdateViewController : UIViewController {
         setUpConstraint()
     }
     
+    
     @objc func closeButtonClicked(){
         self.navigationController?.popViewController(animated: true)
     }
@@ -43,7 +43,10 @@ class PostUpdateViewController : UIViewController {
         
         viewModel.savePost(text: textView.text) { response in
             
-            self.dismiss(animated: true, completion: nil)
+            DispatchQueue.main.async { [weak self] in
+               self?.navigationController?.popViewController(animated: true)
+           }
+            
         }
         
     }

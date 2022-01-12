@@ -51,7 +51,7 @@ class StartViewController: UIViewController {
     let startButton : UIButton = {
         let button = UIButton()
         button.setTitle("시작하기", for: .normal)
-        button.backgroundColor = .green
+        button.backgroundColor = UIColor().getCustomGreen()
         button.addTarget(self, action: #selector(signUp), for: .touchUpInside)
         return button
     }()
@@ -74,7 +74,7 @@ class StartViewController: UIViewController {
     let buttonLogin : UIButton = {
         let button = UIButton()
         button.setTitle("로그인", for: .normal)
-        button.setTitleColor(.green, for: .normal)
+        button.setTitleColor(UIColor().getCustomGreen(), for: .normal)
         button.titleLabel?.textAlignment = .right
         button.addTarget(self, action: #selector(login), for: .touchUpInside)
         return button

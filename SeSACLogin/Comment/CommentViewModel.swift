@@ -42,10 +42,7 @@ class CommentViewModel {
         
         print(commentId, postId, comment)
         APIServiceComment.updateComment(commentId: commentId, postId: postId, comment: comment) { response, error in
-            
-            print("response")
-            print(response)
-            
+
             guard let response = response else {
                 return
             }

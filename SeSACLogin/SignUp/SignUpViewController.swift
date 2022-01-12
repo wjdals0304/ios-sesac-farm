@@ -42,7 +42,7 @@ class SignUpViewController: UIViewController {
     let signButton : UIButton = {
         let button = UIButton()
         button.setTitle("가입하기", for: .normal)
-        button.backgroundColor = .green
+        button.backgroundColor = UIColor().getCustomGreen()
         return button
     }()
     

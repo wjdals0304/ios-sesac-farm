@@ -29,7 +29,7 @@ class LoginViewController: UIViewController {
     let loginButton : UIButton = {
         let button = UIButton()
         button.setTitle("로그인", for: .normal)
-        button.backgroundColor = .green
+        button.backgroundColor = UIColor().getCustomGreen()
         return button
     }()
     
