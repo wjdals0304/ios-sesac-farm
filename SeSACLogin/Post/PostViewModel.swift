@@ -39,5 +39,36 @@ class PostViewModel {
         }
     }
     
+    func updatePost(id: String, text: String ,completion: @escaping( Post ) -> Void ) {
+        
+        APIServicePost.updatePost(id: id, text: text) { response, error in
+            
+            guard let response = response else {
+                return
+            }
+            
+            self.postElement.value = response
+            completion(self.postElement.value)
+        }
+        
+    }
+    
+    func deletePost(id:String, completion: @escaping( Post ) -> Void ){
+        
+        APIServicePost.deletePost(id: id) { response, error in
+            
+            guard let response = response else {
+                return
+            }
+            
+            self.postElement.value = response
+            completion(self.postElement.value)
+
+        }
+        
+    }
+    
+     
+    
 }
 

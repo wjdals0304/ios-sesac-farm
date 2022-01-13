@@ -11,7 +11,7 @@ import SnapKit
 
 class PostDetailViewController : UIViewController {
     
-    private let postData : Post
+    private var postData : Post
     private var commentArray : [CommentElement] = []
     private var postViewModel = PostViewModel()
     private var commentViewModel = CommentViewModel()
@@ -23,15 +23,18 @@ class PostDetailViewController : UIViewController {
         return scrollView
     }()
     
-    let updateButton : UIButton = {
+    lazy var updateBarButton : UIBarButtonItem = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "ellipsis"),for: .normal )
-        button.tintColor = .gray
         button.transform = CGAffineTransform(rotationAngle: -CGFloat.pi / 2)
         button.addTarget(self, action: #selector(ellipsisClicked), for: .touchUpInside)
-        return button
+       
+        let barButtonItem = UIBarButtonItem(customView: button)
+        barButtonItem.style = .plain
+        barButtonItem.target = self
+
+        return barButtonItem
     }()
-    
     
     let contentView = UIView()
     let mainTextView : UIView  = {
@@ -92,8 +95,7 @@ class PostDetailViewController : UIViewController {
         tableView.isScrollEnabled = false
         return tableView
     }()
-    
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
        
@@ -101,18 +103,14 @@ class PostDetailViewController : UIViewController {
         setUpConstraint()
         setUpData()
         
-        self.commentViewModel.getComment(id: String(postData.id)) {
-            [weak self] response in
-            DispatchQueue.main.async {
-                self?.commentArray = response
-                self?.commentTableView.reloadData()
-                
-                self?.commentTableView.snp.makeConstraints { make in
-                    make.height.equalTo(100 * response.count + 200)
-                }
-            }
-        }
     }
+
+    override func viewWillAppear(_ animated: Bool) {
+        NotificationCenter.default.addObserver(self,selector: #selector(reload_text(_:)), name: NSNotification.Name("postData_text") , object: nil)
+        
+        setUpData()
+    }
+    
     
     init(postData: Post) {
         self.postData = postData
@@ -123,6 +121,10 @@ class PostDetailViewController : UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    @objc func reload_text(_ notification : Notification) {
+
+        self.postData.text = notification.object as! String
+    }
     
     func setUpData() {
         
@@ -141,6 +143,28 @@ class PostDetailViewController : UIViewController {
 
         let commentCount = postData.comments.count
         self.commentLabel.text = commentCount == 0 ? "댓글쓰기" : "댓글 \(commentCount)"
+        
+        self.commentViewModel.getComment(id: String(postData.id)) {
+            [weak self] response in
+            DispatchQueue.main.async {
+                self?.commentArray = response
+                self?.commentTableView.reloadData()
+                if response.count == 0  {
+                    
+                    self?.commentTableView.snp.makeConstraints { make in
+                        make.height.equalTo(UIScreen.main.bounds.size.height - 300 )
+                    }
+                    
+                } else {
+                    
+                    self?.commentTableView.snp.makeConstraints { make in
+                        print(100 * response.count + 200)
+                        make.height.equalTo(100 * response.count + 200)
+                    }
+                }
+               
+            }
+        }
         
     }
     
@@ -161,6 +185,7 @@ class PostDetailViewController : UIViewController {
         self.textView.addSubview(commentTextField)
         self.textView.addSubview(addCommentButton)
         
+        navigationItem.rightBarButtonItem = updateBarButton
      }
     
     func setUpConstraint() {
@@ -212,16 +237,16 @@ class PostDetailViewController : UIViewController {
         }
         
         textView.snp.makeConstraints { make in
-            make.bottom.equalTo(scrollView.safeAreaLayoutGuide).offset(5)
-            make.trailing.equalTo(scrollView.safeAreaLayoutGuide)
-            make.leading.equalTo(scrollView.safeAreaLayoutGuide)
+            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(5)
+            make.trailing.equalTo(view.safeAreaLayoutGuide).inset(5)
+            make.leading.equalTo(view.safeAreaLayoutGuide).offset(5)
             make.height.equalTo(100)
         }
         
         commentTextField.snp.makeConstraints { make in
             make.top.equalTo(textView.safeAreaLayoutGuide).offset(20)
-            make.leading.equalTo(textView.safeAreaLayoutGuide).offset(20)
-            make.trailing.equalTo(textView.safeAreaLayoutGuide).inset(20)
+            make.leading.equalTo(textView.safeAreaLayoutGuide).offset(5)
+            make.trailing.equalTo(textView.safeAreaLayoutGuide).inset(5)
             make.height.equalTo(textView).multipliedBy(0.7)
         }
         
@@ -238,34 +263,33 @@ class PostDetailViewController : UIViewController {
         
         commentViewModel.saveComment(id: String(postData.id), comment: commentTextField.text! ) { comment in
             DispatchQueue.main.async { [weak self] in
+                self?.setUpData()
                 self?.commentTableView.reloadData()
             }
         }
     }
     
-    @objc func ellipsisClicked() {
-        
+    @objc func ellipsisClicked(_ sender: UIBarButtonItem) {
         
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let update = UIAlertAction(title: "수정", style: .default) { UIAlertAction in
-//            let vc = CommentUpdateViewController(commentData: data)
-//            self.navigationController?.pushViewController(vc, animated: true)
+            let vc = PostUpdateViewController(postData: self.postData)
+            self.navigationController?.pushViewController(vc, animated: true)
         }
         
         let cancel = UIAlertAction(title: "닫기", style: .cancel, handler: nil)
-        
         let destructive = UIAlertAction(title: "삭제", style: .destructive) { _ in
             
-//            let userId = UserDefaults.standard.integer(forKey: "id")
-//            if userId == data.user.id {
-//                self.commentViewModel.deleteComment(commentId: String(data.id)) { _ in
-//                    DispatchQueue.main.async { [weak self] in
-//                        self?.commentTableView.reloadData()
-//                    }
-//                }
-//            } else {
-//                print("본인이 작성한 글만 삭제할 수 있습니다.")
-//            }
+            let userId = UserDefaults.standard.integer(forKey: "id")
+            if userId == self.postData.user.id {
+                self.postViewModel.deletePost(id: String(self.postData.id)) { _ in
+                    DispatchQueue.main.async { [weak self] in
+                        self?.navigationController?.popViewController(animated: true)
+                    }
+                }
+            } else {
+                print("본인이 작성한 글만 삭제할 수 있습니다.")
+            }
             
         }
 
@@ -321,6 +345,7 @@ extension PostDetailViewController : UITableViewDataSource, UITableViewDelegate 
             if userId == data.user.id {
                 self.commentViewModel.deleteComment(commentId: String(data.id)) { _ in
                     DispatchQueue.main.async { [weak self] in
+                        self?.setUpData()
                         self?.commentTableView.reloadData()
                     }
                 }
@@ -353,13 +378,15 @@ class PostDetailCell: UITableViewCell {
         label.lineBreakMode = .byWordWrapping
         return label
     }()
-    let updateButton : UIButton = {
+    
+    lazy var updateButton : UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "ellipsis"),for: .normal )
         button.tintColor = .gray
         button.transform = CGAffineTransform(rotationAngle: -CGFloat.pi / 2)
         return button
     }()
+    
     
     var showAlertAction : (() -> ())?
     

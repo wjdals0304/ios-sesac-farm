@@ -39,12 +39,12 @@ class PostViewController: UIViewController {
         tableView.dataSource = self
         tableView.register(PostCell.self, forCellReuseIdentifier: "PostCell")
         
-        self.viewModel.getPost { [weak self] response in
-            DispatchQueue.main.async {
-                self?.postArray =  response
-                self?.tableView.reloadData()
-            }
-        }
+        refreshTable()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        print(#function)
+        refreshTable()
     }
     
     func setUpView() {
@@ -66,6 +66,14 @@ class PostViewController: UIViewController {
         }
     }
     
+    func refreshTable() {
+        self.viewModel.getPost { [weak self] response in
+            DispatchQueue.main.async {
+                self?.postArray =  response
+                self?.tableView.reloadData()
+            }
+        }
+    }
     
     @objc func addPostClicked() {
         
