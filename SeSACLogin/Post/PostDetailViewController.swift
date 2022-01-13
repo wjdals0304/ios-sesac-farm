@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import SnapKit
+import Toast
 
 class PostDetailViewController : UIViewController {
     
@@ -270,6 +271,13 @@ class PostDetailViewController : UIViewController {
     }
     
     @objc func ellipsisClicked(_ sender: UIBarButtonItem) {
+        let userId = UserDefaults.standard.integer(forKey: "id")
+        
+        //MARK: 사용권한
+        if userId != self.postData.user.id {
+            self.view.makeToast("본인이 작성한 글만 수정할 수 있습니다.", duration: 1.0, position: .bottom)
+            return
+        }
         
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let update = UIAlertAction(title: "수정", style: .default) { UIAlertAction in
@@ -280,17 +288,11 @@ class PostDetailViewController : UIViewController {
         let cancel = UIAlertAction(title: "닫기", style: .cancel, handler: nil)
         let destructive = UIAlertAction(title: "삭제", style: .destructive) { _ in
             
-            let userId = UserDefaults.standard.integer(forKey: "id")
-            if userId == self.postData.user.id {
-                self.postViewModel.deletePost(id: String(self.postData.id)) { _ in
+            self.postViewModel.deletePost(id: String(self.postData.id)) { _ in
                     DispatchQueue.main.async { [weak self] in
                         self?.navigationController?.popViewController(animated: true)
                     }
-                }
-            } else {
-                print("본인이 작성한 글만 삭제할 수 있습니다.")
             }
-            
         }
 
         alert.addAction(update)
@@ -331,6 +333,15 @@ extension PostDetailViewController : UITableViewDataSource, UITableViewDelegate 
     
     
     func showAlert(data : CommentElement) {
+        
+        let userId = UserDefaults.standard.integer(forKey: "id")
+        
+        //MARK: 사용권한
+        if userId != data.user.id  {
+            self.view.makeToast("본인이 작성한 글만 수정할 수 있습니다.", duration: 1.0, position: .bottom)
+            return
+        }
+        
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let update = UIAlertAction(title: "수정", style: .default) { UIAlertAction in
             let vc = CommentUpdateViewController(commentData: data)
@@ -341,17 +352,12 @@ extension PostDetailViewController : UITableViewDataSource, UITableViewDelegate 
         
         let destructive = UIAlertAction(title: "삭제", style: .destructive) { _ in
             
-            let userId = UserDefaults.standard.integer(forKey: "id")
-            if userId == data.user.id {
                 self.commentViewModel.deleteComment(commentId: String(data.id)) { _ in
                     DispatchQueue.main.async { [weak self] in
                         self?.setUpData()
                         self?.commentTableView.reloadData()
                     }
                 }
-            } else {
-                print("본인이 작성한 글만 삭제할 수 있습니다.")
-            }
         }
 
         alert.addAction(update)
