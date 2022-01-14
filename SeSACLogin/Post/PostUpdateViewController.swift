@@ -26,7 +26,11 @@ class PostUpdateViewController : UIViewController {
         return barButtonItem
     }()
     
-    var textView = UITextView()
+    var textView : UITextView = {
+        let textView = UITextView()
+        textView.font = .systemFont(ofSize: 20)
+        return textView
+    }()
   
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -45,6 +49,7 @@ class PostUpdateViewController : UIViewController {
         super.viewDidLoad()
         setup()
         setUpConstraint()
+        
         
         if postData != nil  {
             self.textView.text = postData?.text
@@ -87,16 +92,17 @@ class PostUpdateViewController : UIViewController {
         view.backgroundColor = .systemBackground
         navigationItem.rightBarButtonItem = completeBarButton
         navigationItem.leftBarButtonItem = backBarButton
-        
         self.view.addSubview(textView)
     }
     
     func setUpConstraint() {
         
         textView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
             
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.bottom.top.equalToSuperview()
         }
+        
         
         
     }

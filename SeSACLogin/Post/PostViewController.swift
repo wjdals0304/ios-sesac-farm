@@ -14,11 +14,13 @@ class PostViewController: UIViewController {
     let addButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "plus"), for: .normal)
-        button.contentMode = .scaleToFill
+        button.contentMode = .scaleAspectFit
         button.tintColor  = UIColor.white
         button.backgroundColor = UIColor().getCustomGreen()
         button.layer.cornerRadius = 30
         button.addTarget(self, action: #selector(addPostClicked), for: .touchUpInside)
+        // button image size
+        button.setPreferredSymbolConfiguration(.init(pointSize: 40, weight: .regular, scale: .default), forImageIn: .normal)
         return button
     }()
     
@@ -59,7 +61,7 @@ class PostViewController: UIViewController {
         }
         
         addButton.snp.makeConstraints { make in
-            make.trailing.equalToSuperview().inset(60)
+            make.trailing.equalToSuperview().inset(40)
             make.bottom.equalToSuperview().inset(60)
             make.height.equalTo(60)
             make.width.equalTo(60)

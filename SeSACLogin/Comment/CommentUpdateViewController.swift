@@ -24,7 +24,11 @@ class CommentUpdateViewController : UIViewController {
         return barButtonItem
     }()
     
-    var textView = UITextView()
+    var textView : UITextView = {
+        let textView = UITextView()
+        textView.font = .systemFont(ofSize: 20)
+        return textView
+    }()
     
     init(commentData: CommentElement) {
         self.commentData = commentData
@@ -51,10 +55,10 @@ class CommentUpdateViewController : UIViewController {
     
     func sepUpConstraints(){
         textView.snp.makeConstraints { make in
-            make.top.equalToSuperview().offset(100)
+            make.top.equalToSuperview().offset(150)
             make.leading.equalToSuperview().offset(30)
             make.trailing.equalToSuperview().inset(30)
-            make.height.equalTo(100)
+            make.height.equalTo(200)
         }
     }
     

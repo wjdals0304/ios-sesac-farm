@@ -51,7 +51,12 @@ class PostDetailViewController : UIViewController {
         return label
     }()
     let createDateLabel = UILabel()
-    let titleTextLabel = UILabel()
+    let titleTextLabel : UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
+        return label
+    }()
 
     let titleTextView : UIView = {
         let view = UIView()
@@ -129,6 +134,41 @@ class PostDetailViewController : UIViewController {
     
     func setUpData() {
         
+        self.commentViewModel.getComment(id: String(postData.id)) {
+            [weak self] response in
+            DispatchQueue.main.async {
+                
+                self?.commentArray = response
+                self?.commentTableView.reloadData()
+                self?.commentLabel.text = response.count == 0 ? "댓글쓰기" : "댓글 \(response.count)"
+                //MARK: 댓글 테이블뷰 사이즈 조절 
+                if response.count == 0  {
+                    
+                    self?.resetTableViewContraints()
+                    self?.commentTableView.snp.makeConstraints{ make in
+                        make.height.equalTo(UIScreen.main.bounds.size.height - 300 )
+                    }
+                    
+                } else {
+                    
+                    self?.resetTableViewContraints()
+                    
+                    let tableViewHeight : Int = Int(UIScreen.main.bounds.size.height - 300)
+                    var resultHeight = 0
+                    
+                    if tableViewHeight >= Int(100 * response.count + 50) {
+                            resultHeight = tableViewHeight
+                    } else {
+                        resultHeight = response.count * 200 + 50
+                    }
+
+                    self?.commentTableView.snp.makeConstraints { make in
+                        make.height.equalTo(resultHeight)
+                    }
+                }
+            }
+        }
+        
         self.commentTableView.register(PostDetailCell.self, forCellReuseIdentifier: "PostDetailCell")
         self.userNameLabel.text = "\(postData.user.username)"
         
@@ -142,31 +182,7 @@ class PostDetailViewController : UIViewController {
         self.createDateLabel.text = "\(dateFormatter.string(from: createDate))"
         self.titleTextLabel.text = "\(postData.text)"
 
-        let commentCount = postData.comments.count
-        self.commentLabel.text = commentCount == 0 ? "댓글쓰기" : "댓글 \(commentCount)"
-        
-        self.commentViewModel.getComment(id: String(postData.id)) {
-            [weak self] response in
-            DispatchQueue.main.async {
-                self?.commentArray = response
-                self?.commentTableView.reloadData()
-                if response.count == 0  {
-                    
-                    self?.commentTableView.snp.makeConstraints { make in
-                        make.height.equalTo(UIScreen.main.bounds.size.height - 300 )
-                    }
-                    
-                } else {
-                    
-                    self?.commentTableView.snp.makeConstraints { make in
-                        print(100 * response.count + 200)
-                        make.height.equalTo(100 * response.count + 200)
-                    }
-                }
-               
-            }
-        }
-        
+     
     }
     
     
@@ -266,6 +282,7 @@ class PostDetailViewController : UIViewController {
             DispatchQueue.main.async { [weak self] in
                 self?.setUpData()
                 self?.commentTableView.reloadData()
+                self?.commentTextField.text = ""
             }
         }
     }
@@ -300,6 +317,18 @@ class PostDetailViewController : UIViewController {
         alert.addAction(destructive)
 
        self.present(alert, animated: true, completion: nil)
+    }
+    
+    // MARK
+    func resetTableViewContraints(){
+        
+        commentTableView.snp.removeConstraints()
+        
+        commentTableView.snp.makeConstraints { make in
+            make.top.equalTo(mainTextView.snp.bottom)
+            make.leading.trailing.equalToSuperview()
+            make.bottom.equalToSuperview()
+        }
     }
     
 }
