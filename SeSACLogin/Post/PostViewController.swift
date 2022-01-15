@@ -40,7 +40,6 @@ class PostViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(PostCell.self, forCellReuseIdentifier: "PostCell")
-        
         refreshTable()
     }
     
@@ -120,15 +119,17 @@ extension PostViewController : UITableViewDelegate , UITableViewDataSource {
         
         cell.layer.borderWidth = 5
         cell.layer.borderColor = UIColor().getCustomGray().cgColor
-            
+
         return cell
 
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 200
+        
     }
     
+        
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
             
         let postData = postArray[indexPath.row]
@@ -149,7 +150,14 @@ class PostCell : UITableViewCell {
         label.backgroundColor = UIColor().getCustomGray()
         return label
     }()
-    let titleTextLabel = UILabel()
+    let titleTextLabel : UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
+        label.adjustsFontSizeToFitWidth = true
+        label.sizeToFit()
+        return label
+    }()
     let createDateLabel = UILabel()
     let lineView = UIView()
     let commentWriteLabel = UILabel()

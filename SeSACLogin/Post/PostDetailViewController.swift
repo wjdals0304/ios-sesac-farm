@@ -55,6 +55,8 @@ class PostDetailViewController : UIViewController {
         let label = UILabel()
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
+        label.adjustsFontSizeToFitWidth = true
+        label.sizeToFit()
         return label
     }()
 
@@ -109,8 +111,21 @@ class PostDetailViewController : UIViewController {
         setUpConstraint()
         setUpData()
         
+        
+        // MARK: 키보드 디텍션
+        NotificationCenter.default.addObserver(self, selector: #selector(adjustInputView), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(adjustInputView), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(tapBG))
+        view.addGestureRecognizer(tap)
+        
     }
-
+    
+    // TODO: BG 탭했을때, 키보드 내려오게 하기
+   @objc func tapBG(_ sender: Any) {
+       self.view.endEditing(true)
+   }
+    
     override func viewWillAppear(_ animated: Bool) {
         NotificationCenter.default.addObserver(self,selector: #selector(reload_text(_:)), name: NSNotification.Name("postData_text") , object: nil)
         
@@ -141,7 +156,7 @@ class PostDetailViewController : UIViewController {
                 self?.commentArray = response
                 self?.commentTableView.reloadData()
                 self?.commentLabel.text = response.count == 0 ? "댓글쓰기" : "댓글 \(response.count)"
-                //MARK: 댓글 테이블뷰 사이즈 조절 
+                //MARK: 댓글 테이블뷰 사이즈 조절
                 if response.count == 0  {
                     
                     self?.resetTableViewContraints()
@@ -333,7 +348,6 @@ class PostDetailViewController : UIViewController {
     
 }
 
-
 extension PostDetailViewController : UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -455,4 +469,28 @@ class PostDetailCell: UITableViewCell {
         showAlertAction?()
     }
     
+}
+
+
+extension PostDetailViewController {
+    
+    @objc private func adjustInputView(noti: Notification) {
+        guard let userInfo = noti.userInfo else { return }
+        // TODO: 키보드 높이에 따른 인풋뷰 위치 변경
+        guard let keyboardFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
+        
+        
+        if noti.name == UIResponder.keyboardWillShowNotification {
+            let adjustmentHeight = keyboardFrame.height - view.safeAreaInsets.bottom
+                        
+            textView.snp.updateConstraints { make in
+                make.bottom.equalTo(view.safeAreaLayoutGuide).inset(adjustmentHeight)
+            }
+            
+        } else {
+            textView.snp.updateConstraints { make in
+                make.bottom.equalTo(view.safeAreaLayoutGuide).offset(5)
+            }
+        }
+    }
 }
