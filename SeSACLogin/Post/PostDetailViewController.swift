@@ -247,13 +247,16 @@ class PostDetailViewController : UIViewController {
         
         titleTextView.snp.makeConstraints { make in
             make.top.equalTo(createDateLabel).offset(30)
-            make.leading.trailing.equalToSuperview()
+            make.leading.equalToSuperview()
+            make.trailing.equalToSuperview()
             make.bottom.equalTo(commentLabel).inset(30)
         }
         
         titleTextLabel.snp.makeConstraints { make in
-            make.top.equalTo(titleTextView).offset(10)
+
             make.leading.equalTo(titleTextView).offset(20)
+            make.trailing.equalTo(titleTextView).inset(20)
+            make.top.bottom.equalTo(titleTextView)
         }
         
         commentLabel.snp.makeConstraints { make in

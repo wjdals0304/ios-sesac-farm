@@ -40,6 +40,10 @@ class PostViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(PostCell.self, forCellReuseIdentifier: "PostCell")
+        // TODO: cell 높이 맞춰야함
+        tableView.rowHeight = UITableView.automaticDimension
+        tableView.estimatedRowHeight = 200
+        
         refreshTable()
     }
     
@@ -161,8 +165,6 @@ class PostCell : UITableViewCell {
     let createDateLabel = UILabel()
     let lineView = UIView()
     let commentWriteLabel = UILabel()
-
-
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -175,11 +177,10 @@ class PostCell : UITableViewCell {
             make.top.leading.equalTo(self.contentView.safeAreaLayoutGuide).offset(20)
         }
         
-        
-        
         titleTextLabel.snp.makeConstraints { make in
             make.top.equalTo(nickNameLabel.snp.bottom).offset(20)
             make.leading.equalTo(nickNameLabel)
+            make.trailing.equalTo(self.contentView.snp.trailing).inset(20)
         }
         
         createDateLabel.snp.makeConstraints { make in
@@ -199,6 +200,7 @@ class PostCell : UITableViewCell {
         commentWriteLabel.snp.makeConstraints { make in
             make.top.equalTo(lineView.snp.bottom).offset(10)
             make.leading.equalTo(titleTextLabel)
+            make.bottom.equalTo(self.contentView.snp.bottom).inset(5)
         }
     
         
