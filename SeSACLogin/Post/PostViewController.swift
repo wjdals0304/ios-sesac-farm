@@ -127,12 +127,7 @@ extension PostViewController : UITableViewDelegate , UITableViewDataSource {
         return cell
 
     }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 200
         
-    }
-    
         
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
             
@@ -174,18 +169,20 @@ class PostCell : UITableViewCell {
         }
         
         nickNameLabel.snp.makeConstraints { make in
-            make.top.leading.equalTo(self.contentView.safeAreaLayoutGuide).offset(20)
+            make.top.leading.equalToSuperview().offset(20)
+    
         }
         
         titleTextLabel.snp.makeConstraints { make in
             make.top.equalTo(nickNameLabel.snp.bottom).offset(20)
-            make.leading.equalTo(nickNameLabel)
-            make.trailing.equalTo(self.contentView.snp.trailing).inset(20)
+            make.leading.equalTo(nickNameLabel.snp.leading)
+            make.trailing.equalToSuperview().inset(20)
+            
         }
         
         createDateLabel.snp.makeConstraints { make in
             make.top.equalTo(titleTextLabel.snp.bottom).offset(20)
-            make.leading.equalTo(titleTextLabel)
+            make.leading.equalTo(titleTextLabel.snp.leading)
             
         }
         
@@ -197,10 +194,13 @@ class PostCell : UITableViewCell {
         }
         
         lineView.backgroundColor = UIColor().getCustomGray()
+        
+        
         commentWriteLabel.snp.makeConstraints { make in
             make.top.equalTo(lineView.snp.bottom).offset(10)
             make.leading.equalTo(titleTextLabel)
-            make.bottom.equalTo(self.contentView.snp.bottom).inset(5)
+            make.bottom.equalToSuperview().inset(10)
+//            make.bottom.equalTo(self.contentView.snp.bottom).inset(5)
         }
     
         

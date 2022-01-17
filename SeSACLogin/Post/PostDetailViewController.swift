@@ -67,7 +67,14 @@ class PostDetailViewController : UIViewController {
         return view
     }()
     
-    let commentLabel = UILabel()
+    let commentLabel: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.lineBreakMode = .byWordWrapping
+        label.adjustsFontSizeToFitWidth = true
+        label.sizeToFit()
+        return label
+    }()
     
     let textView : UIView = {
         let view = UIView()
@@ -118,6 +125,10 @@ class PostDetailViewController : UIViewController {
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(tapBG))
         view.addGestureRecognizer(tap)
+        
+        commentTableView.rowHeight = UITableView.automaticDimension
+        commentTableView.estimatedRowHeight = 200
+        
         
     }
     
@@ -233,7 +244,6 @@ class PostDetailViewController : UIViewController {
         
         mainTextView.snp.makeConstraints { make in
             make.leading.top.trailing.equalToSuperview()
-            make.height.equalTo(300)
         }
         
         userNameLabel.snp.makeConstraints { make in
@@ -266,7 +276,7 @@ class PostDetailViewController : UIViewController {
         }
 
         commentTableView.snp.makeConstraints { make in
-            make.top.equalTo(mainTextView.snp.bottom)
+            make.top.equalTo(mainTextView.snp.bottom).offset(5)
             make.leading.trailing.equalToSuperview()
             make.bottom.equalToSuperview()
         }
@@ -373,11 +383,6 @@ extension PostDetailViewController : UITableViewDataSource, UITableViewDelegate 
         return cell
     }
     
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 100 
-    }
-    
-    
     func showAlert(data : CommentElement) {
         
         let userId = UserDefaults.standard.integer(forKey: "id")
@@ -453,9 +458,12 @@ class PostDetailCell: UITableViewCell {
             make.top.leading.equalToSuperview().offset(20)
             
         }
+        
         commentTextLabel.snp.makeConstraints { make in
-            make.top.equalTo(nickNameLabel).offset(20)
+            make.top.equalTo(nickNameLabel.snp.bottom).offset(20)
             make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().inset(20)
+            make.bottom.equalToSuperview().inset(20)
         }
         updateButton.snp.makeConstraints { make in
             make.trailing.equalToSuperview().inset(20)
