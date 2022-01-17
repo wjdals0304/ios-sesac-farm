@@ -282,14 +282,14 @@ class PostDetailViewController : UIViewController {
         }
         
         textView.snp.makeConstraints { make in
-            make.bottom.equalTo(view.safeAreaLayoutGuide).offset(5)
+            make.bottom.equalTo(scrollView.frameLayoutGuide)
             make.trailing.equalTo(view.safeAreaLayoutGuide).inset(5)
             make.leading.equalTo(view.safeAreaLayoutGuide).offset(5)
             make.height.equalTo(100)
         }
         
         commentTextField.snp.makeConstraints { make in
-            make.top.equalTo(textView.safeAreaLayoutGuide).offset(20)
+            make.top.equalTo(textView.safeAreaLayoutGuide).offset(5)
             make.leading.equalTo(textView.safeAreaLayoutGuide).offset(5)
             make.trailing.equalTo(textView.safeAreaLayoutGuide).inset(5)
             make.height.equalTo(textView).multipliedBy(0.7)
@@ -493,14 +493,14 @@ extension PostDetailViewController {
         
         if noti.name == UIResponder.keyboardWillShowNotification {
             let adjustmentHeight = keyboardFrame.height - view.safeAreaInsets.bottom
-                        
+
             textView.snp.updateConstraints { make in
-                make.bottom.equalTo(view.safeAreaLayoutGuide).inset(adjustmentHeight)
+                make.bottom.equalTo(scrollView.frameLayoutGuide).inset(adjustmentHeight)
             }
             
         } else {
             textView.snp.updateConstraints { make in
-                make.bottom.equalTo(view.safeAreaLayoutGuide).offset(5)
+                make.bottom.equalTo(scrollView.frameLayoutGuide)
             }
         }
     }
