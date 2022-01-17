@@ -260,7 +260,9 @@ class PostDetailViewController : UIViewController {
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
             make.bottom.equalTo(commentLabel).inset(30)
+            make.height.greaterThanOrEqualTo(300)
         }
+        
         
         titleTextLabel.snp.makeConstraints { make in
 

@@ -23,6 +23,7 @@ class LoginViewController: UIViewController {
         let password = UITextField()
         password.placeholder = "비밀번호"
         password.layer.borderWidth = 1
+        password.isSecureTextEntry = true 
         return password
     }()
     
