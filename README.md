@@ -11,5 +11,5 @@
 
 # 사용 요소
 - snapkit, tableview , mvvm
-- urlsession
+- urlsession , RestAPI
 
