@@ -1,16 +1,15 @@
 //
-//  LoginViewController.swift
+//  SignUpViewController.swift
 //  SeSACLogin
 //
-//  Created by 김정민 on 2022/01/03.
+//  Created by 김정민 on 2022/01/04.
 //
 
 import UIKit
-import SnapKit
 
-class LoginViewController: UIViewController {
-    
-    let viewModel = LoginViewModal()
+class SignUpViewController: UIViewController {
+
+    let viewModel = SignUpViewModel()
     
     let emailText : UITextField = {
         let email = UITextField()
@@ -19,23 +18,35 @@ class LoginViewController: UIViewController {
         return email
     }()
     
+    let nicknameText : UITextField = {
+        let nickname = UITextField()
+        nickname.placeholder = "닉네임"
+        nickname.layer.borderWidth = 1
+        return nickname
+    }()
+    
     let passwordText : UITextField = {
         let password = UITextField()
         password.placeholder = "비밀번호"
         password.layer.borderWidth = 1
-        password.isSecureTextEntry = true 
         return password
     }()
     
-    let loginButton : UIButton = {
+    let passwordCheckText : UITextField = {
+        let passwordCheck = UITextField()
+        passwordCheck.placeholder = "비밀번호 확인"
+        passwordCheck.layer.borderWidth = 1
+        return passwordCheck
+    }()
+    
+    let signButton : UIButton = {
         let button = UIButton()
-        button.setTitle("로그인", for: .normal)
+        button.setTitle("가입하기", for: .normal)
         button.backgroundColor = UIColor().getCustomGreen()
         return button
     }()
     
     let stackView: UIStackView = {
-        
         let view = UIStackView()
         view.axis = .vertical
         view.spacing = 3
@@ -43,67 +54,76 @@ class LoginViewController: UIViewController {
         return view
     }()
     
-    
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(closeButtonClicked))
-        
-        emailText.addTarget(self, action: #selector(emailTextFieldDidChange(_:)), for: .editingChanged)
-        passwordText.addTarget(self, action: #selector(passwordTextFieldDidChange(_:)), for: .editingChanged)
-        loginButton.addTarget(self, action: #selector(loginButtonClicked), for: .touchUpInside)
-        
         setupView()
         setUpConstraints()
+        
+        emailText.addTarget(self, action: #selector(emailTextFieldDidChange(_:)), for: .editingChanged)
+        nicknameText.addTarget(self, action: #selector(nicknameTextFieldDidChange(_:)), for: .editingChanged)
+        passwordText.addTarget(self, action: #selector(passwordTextFieldDidChange(_:)), for: .editingChanged)
+        
+        signButton.addTarget(self, action: #selector(signButtonClicked), for: .touchUpInside)
+        
+    }
+    
+    @objc func emailTextFieldDidChange(_ textfield: UITextField) {
+        viewModel.email.value = textfield.text ?? ""
+    }
+    
+    @objc func nicknameTextFieldDidChange(_ textfield: UITextField) {
+        viewModel.username.value = textfield.text ?? ""
+    }
+    
+    @objc func passwordTextFieldDidChange(_ textfield: UITextField) {
+        viewModel.password.value = textfield.text ?? ""
+    }
+    
+    func setupView() {
+        
+        self.view.backgroundColor = .white
+        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "chevron.backward"), style: .plain, target: self, action: #selector(closeButtonClicked))
+    
+        self.view.addSubview(stackView)
+        
+        [emailText,nicknameText,passwordText,passwordCheckText,signButton].forEach {
+            self.stackView.addArrangedSubview($0)
+        }
+        
     }
     
     @objc func closeButtonClicked(){
         self.dismiss(animated: true, completion: nil)
     }
     
-    @objc func emailTextFieldDidChange(_ textfield: UITextField){
-        viewModel.email.value = textfield.text ?? ""
-    }
-    
-    @objc func passwordTextFieldDidChange(_ textfield: UITextField){
-        viewModel.password.value = textfield.text ?? ""
-    }
-    
-    func setupView() {
-        self.view.backgroundColor = .white
-        
-        self.view.addSubview(stackView)
-        [emailText,passwordText,loginButton].forEach {
-            
-            self.stackView.addArrangedSubview($0)
-        }
-    }
-    
-    func setUpConstraints(){
-        
+    func setUpConstraints() {
         self.stackView.snp.makeConstraints { make in
             make.top.equalTo(self.view.safeAreaLayoutGuide).offset(40)
             make.centerX.equalToSuperview()
             make.width.equalTo(self.view.snp.width).multipliedBy(0.8)
             make.height.equalTo(200)
         }
-        
     }
-    
-    
-    @objc func loginButtonClicked() {
+
+    @objc func signButtonClicked() {
         
-        viewModel.postUserLogin {
-                        
+        viewModel.fetchSignUpAPI {
+            
             DispatchQueue.main.async {
                 let svc = PostViewController()
+                
                 let nav = UINavigationController(rootViewController: svc)
+                
                 nav.modalPresentationStyle = .fullScreen
+
                 self.present(nav, animated: true, completion: nil)
             }
+            
         }
+        
     }
-    
-    
+
     
     
 }

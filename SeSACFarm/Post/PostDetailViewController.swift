@@ -484,7 +484,7 @@ class PostDetailCell: UITableViewCell {
     
 }
 
-
+  
 extension PostDetailViewController {
     
     @objc private func adjustInputView(noti: Notification) {
