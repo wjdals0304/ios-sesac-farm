@@ -32,7 +32,7 @@ class PostViewController: UIViewController {
         
         view.backgroundColor = .white
         navigationItem.title = "새싹농장"
-        navigationController?.navigationBar.prefersLargeTitles = true
+        
 
         setUpView()
         setUpViewConstraints()
