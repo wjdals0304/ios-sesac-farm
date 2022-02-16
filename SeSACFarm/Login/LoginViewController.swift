@@ -16,6 +16,8 @@ class LoginViewController: UIViewController {
         let email = UITextField()
         email.placeholder = "이메일 주소"
         email.layer.borderWidth = 1
+        email.layer.cornerRadius = 8
+        email.layer.borderColor = UIColor().getCustomGray().cgColor
         return email
     }()
     
@@ -23,7 +25,9 @@ class LoginViewController: UIViewController {
         let password = UITextField()
         password.placeholder = "비밀번호"
         password.layer.borderWidth = 1
-        password.isSecureTextEntry = true 
+        password.layer.cornerRadius = 8
+        password.isSecureTextEntry = true
+        password.layer.borderColor = UIColor().getCustomGray().cgColor
         return password
     }()
     
@@ -31,6 +35,7 @@ class LoginViewController: UIViewController {
         let button = UIButton()
         button.setTitle("로그인", for: .normal)
         button.backgroundColor = UIColor().getCustomGreen()
+        button.layer.cornerRadius = 8
         return button
     }()
     
@@ -70,10 +75,11 @@ class LoginViewController: UIViewController {
     
     func setupView() {
         self.view.backgroundColor = .white
+        navigationItem.leftBarButtonItem?.tintColor = .black
+        navigationItem.title = "새싹농장 로그인"
         
         self.view.addSubview(stackView)
         [emailText,passwordText,loginButton].forEach {
-            
             self.stackView.addArrangedSubview($0)
         }
     }
