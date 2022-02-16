@@ -29,11 +29,10 @@ class PostDetailViewController : UIViewController {
         button.setImage(UIImage(systemName: "ellipsis"),for: .normal )
         button.transform = CGAffineTransform(rotationAngle: -CGFloat.pi / 2)
         button.addTarget(self, action: #selector(ellipsisClicked), for: .touchUpInside)
-       
+        button.tintColor = .black
         let barButtonItem = UIBarButtonItem(customView: button)
         barButtonItem.style = .plain
         barButtonItem.target = self
-
         return barButtonItem
     }()
     
@@ -97,7 +96,7 @@ class PostDetailViewController : UIViewController {
         button.setImage(UIImage(systemName: "plus"), for: .normal)
         button.tintColor  = UIColor.white
         button.backgroundColor = UIColor().getCustomGreen()
-        button.layer.cornerRadius = 20
+        button.layer.cornerRadius = 15
         button.addTarget(self, action: #selector(addCommentClicked), for: .touchUpInside)
         return button
     }()
@@ -129,7 +128,6 @@ class PostDetailViewController : UIViewController {
         commentTableView.rowHeight = UITableView.automaticDimension
         commentTableView.estimatedRowHeight = 200
         
-        
     }
     
     // TODO: BG 탭했을때, 키보드 내려오게 하기
@@ -139,10 +137,8 @@ class PostDetailViewController : UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         NotificationCenter.default.addObserver(self,selector: #selector(reload_text(_:)), name: NSNotification.Name("postData_text") , object: nil)
-        
         setUpData()
     }
-    
     
     init(postData: Post) {
         self.postData = postData
@@ -154,7 +150,6 @@ class PostDetailViewController : UIViewController {
     }
     
     @objc func reload_text(_ notification : Notification) {
-
         self.postData.text = notification.object as! String
     }
     
@@ -213,6 +208,9 @@ class PostDetailViewController : UIViewController {
     
     
     func setUp() {
+        
+        navigationController?.navigationBar.prefersLargeTitles = false
+
         self.view.backgroundColor = .systemBackground
         self.view.addSubview(scrollView)
         scrollView.addSubview(contentView)
@@ -228,18 +226,25 @@ class PostDetailViewController : UIViewController {
         self.textView.addSubview(commentTextField)
         self.textView.addSubview(addCommentButton)
         
+        
         navigationItem.rightBarButtonItem = updateBarButton
+        let backBarButton = UIBarButtonItem(image: UIImage(systemName: "arrow.backward"), style: .plain, target: self, action: #selector(closeButtonClicked))
+        navigationItem.leftBarButtonItem = backBarButton
+        navigationItem.leftBarButtonItem?.tintColor = .black
+        navigationItem.rightBarButtonItem?.tintColor = .black
+
+        navigationController?.navigationBar.barTintColor = .systemBackground
      }
     
     func setUpConstraint() {
         
         scrollView.snp.makeConstraints { make in
-            make.edges.equalToSuperview()
+            make.edges.equalTo(self.view)
         }
-        
         contentView.snp.makeConstraints { make in
-            make.width.equalToSuperview()
-            make.centerX.top.bottom.equalToSuperview()
+            make.width.equalTo(self.scrollView.snp.width)
+            make.height.greaterThanOrEqualTo(view.snp.height).priority(.low)
+            make.edges.equalTo(scrollView.contentLayoutGuide)
         }
         
         mainTextView.snp.makeConstraints { make in
@@ -260,7 +265,7 @@ class PostDetailViewController : UIViewController {
             make.leading.equalToSuperview()
             make.trailing.equalToSuperview()
             make.bottom.equalTo(commentLabel).inset(30)
-            make.height.greaterThanOrEqualTo(300)
+            make.height.greaterThanOrEqualTo(100)
         }
         
         
@@ -298,7 +303,7 @@ class PostDetailViewController : UIViewController {
         }
         
         addCommentButton.snp.makeConstraints { make in
-            make.trailing.equalTo(commentTextField.snp.trailing)
+            make.trailing.equalTo(commentTextField.snp.trailing).inset(5)
             make.bottom.equalTo(commentTextField.snp.bottom).inset(5)
             make.height.equalTo(commentTextField).multipliedBy(0.8)
             make.width.equalTo(commentTextField).multipliedBy(0.1)
@@ -361,6 +366,9 @@ class PostDetailViewController : UIViewController {
         }
     }
     
+    @objc func closeButtonClicked(){
+        self.navigationController?.popViewController(animated: true)
+    }
 }
 
 extension PostDetailViewController : UITableViewDataSource, UITableViewDelegate {
@@ -471,6 +479,7 @@ class PostDetailCell: UITableViewCell {
             make.trailing.equalToSuperview().inset(20)
             make.top.equalToSuperview().offset(20)
         }
+        
         self.updateButton.addTarget(self, action: #selector(showAlertClicked), for: .touchUpInside)
     }
     
