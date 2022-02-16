@@ -92,6 +92,8 @@ class PostUpdateViewController : UIViewController {
         view.backgroundColor = .systemBackground
         navigationItem.rightBarButtonItem = completeBarButton
         navigationItem.leftBarButtonItem = backBarButton
+        navigationItem.rightBarButtonItem?.tintColor = .black
+        navigationItem.leftBarButtonItem?.tintColor = .black
         self.view.addSubview(textView)
     }
     
