@@ -9,14 +9,13 @@ import Foundation
 
 class APIServiceComment {
     static func getComment(id: String, completion: @escaping ([CommentElement], APIError?) -> Void) {
-        let param = "post=\(id)"
-        let paramData = param.data(using: .utf8)
-        var request = URLRequest(url: CommentUrlEndpoint.getComment.url)
+
+        var request = URLRequest(url: CommentUrlEndpoint.getComment(id: id).url)
         request.httpMethod = "GET"
-        request.httpBody = paramData
         let jwt = UserDefaults.token
         request.setValue("Bearer " + jwt, forHTTPHeaderField: "Authorization")
         URLSession.shared.dataTask(with: request) { data, response, error in
+            
             guard error == nil else {
                 completion([], .failed)
                 return
@@ -29,6 +28,7 @@ class APIServiceComment {
                 completion([], .invalidResponse)
                 return
             }
+            print(response.statusCode)
             guard response.statusCode == 200 else {
                 completion([], .failed)
                 return
@@ -46,9 +46,11 @@ class APIServiceComment {
     }
 
     static func saveComment(id: String, comment: String, completion: @escaping (CommentElement?, APIError?) -> Void) {
+        print(#function)
+        var request = URLRequest(url: CommentUrlEndpoint.saveComment.url)
         let param =  "post=\(id)&comment=\(comment)"
         let paramData = param.data(using: .utf8)
-        var request = URLRequest(url: CommentUrlEndpoint.saveComment.url)
+        
         request.httpMethod = "POST"
         request.httpBody = paramData
         let jwt = UserDefaults.token
