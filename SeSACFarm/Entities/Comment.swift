@@ -23,10 +23,10 @@ struct CommentElement: Codable {
 }
 
 struct PostComment: Codable {
-    let id : Int
-    let text : String
+    let id: Int
+    let text: String
     let user: Int
-    let createdAt, updatedAt : String
+    let createdAt, updatedAt: String
     
     enum CodingKeys: String, CodingKey {
         case id, text, user

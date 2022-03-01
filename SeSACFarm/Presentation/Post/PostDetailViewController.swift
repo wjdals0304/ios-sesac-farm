@@ -10,23 +10,23 @@ import UIKit
 import SnapKit
 import Toast
 
-class PostDetailViewController : UIViewController {
+final class PostDetailViewController: UIViewController {
     
-    private var postData : Post
-    private var commentArray : [CommentElement] = []
+    private var postData: Post
+    private var commentArray: [CommentElement] = []
     private var postViewModel = PostViewModel()
     private var commentViewModel = CommentViewModel()
     
-    let scrollView : UIScrollView = {
+    private let scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.bounces = false
         scrollView.isScrollEnabled = true
         return scrollView
     }()
     
-    lazy var updateBarButton : UIBarButtonItem = {
+    private lazy var updateBarButton: UIBarButtonItem = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "ellipsis"),for: .normal )
+        button.setImage(UIImage(systemName: "ellipsis"), for: .normal )
         button.transform = CGAffineTransform(rotationAngle: -CGFloat.pi / 2)
         button.addTarget(self, action: #selector(ellipsisClicked), for: .touchUpInside)
         button.tintColor = .black
@@ -36,21 +36,21 @@ class PostDetailViewController : UIViewController {
         return barButtonItem
     }()
     
-    let contentView = UIView()
-    let mainTextView : UIView  = {
+    private let contentView = UIView()
+    private let mainTextView: UIView = {
         let view = UIView()
         view.layer.borderWidth = 1
         view.layer.borderColor = UIColor().getCustomGray().cgColor
         return view
     }()
 
-    let userNameLabel: UILabel = {
+    private let userNameLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 20)
         return label
     }()
-    let createDateLabel = UILabel()
-    let titleTextLabel : UILabel = {
+    private let createDateLabel = UILabel()
+    private let titleTextLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
@@ -59,14 +59,14 @@ class PostDetailViewController : UIViewController {
         return label
     }()
 
-    let titleTextView : UIView = {
+    private let titleTextView: UIView = {
         let view = UIView()
         view.layer.borderWidth = 1
         view.layer.borderColor = UIColor().getCustomGray().cgColor
         return view
     }()
     
-    let commentLabel: UILabel = {
+    private let commentLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
@@ -75,7 +75,7 @@ class PostDetailViewController : UIViewController {
         return label
     }()
     
-    let textView : UIView = {
+    private let textView: UIView = {
         let view = UIView()
         view.backgroundColor = .systemBackground
         view.layer.borderWidth = 1
@@ -83,7 +83,7 @@ class PostDetailViewController : UIViewController {
         return view
     }()
     
-    let commentTextField : UITextField = {
+    private let commentTextField: UITextField = {
         let textField = UITextField()
         textField.backgroundColor = UIColor().getCustomGray()
         textField.placeholder = "댓글을 입력해주세요."
@@ -91,7 +91,7 @@ class PostDetailViewController : UIViewController {
         return textField
     }()
     
-    let addCommentButton: UIButton = {
+    private lazy var addCommentButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "plus"), for: .normal)
         button.tintColor  = UIColor.white
@@ -101,7 +101,7 @@ class PostDetailViewController : UIViewController {
         return button
     }()
     
-    lazy private var commentTableView : UITableView = {
+    private lazy var commentTableView: UITableView = {
        let tableView = UITableView()
         tableView.dataSource = self
         tableView.delegate = self
@@ -117,7 +117,6 @@ class PostDetailViewController : UIViewController {
         setUpConstraint()
         setUpData()
         
-        
         // MARK: 키보드 디텍션
         NotificationCenter.default.addObserver(self, selector: #selector(adjustInputView), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(adjustInputView), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -130,13 +129,12 @@ class PostDetailViewController : UIViewController {
         
     }
     
-    // TODO: BG 탭했을때, 키보드 내려오게 하기
-   @objc func tapBG(_ sender: Any) {
+    @objc func tapBG(_ sender: Any) {
        self.view.endEditing(true)
-   }
+    }
     
     override func viewWillAppear(_ animated: Bool) {
-        NotificationCenter.default.addObserver(self,selector: #selector(reload_text(_:)), name: NSNotification.Name("postData_text") , object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(reload_text(_:)), name: NSNotification.Name("postData_text"), object: nil)
         setUpData()
     }
     
@@ -149,24 +147,27 @@ class PostDetailViewController : UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc func reload_text(_ notification : Notification) {
-        self.postData.text = notification.object as! String
+    @objc func reload_text(_ notification: Notification) {
+        guard let object = notification.object as? String else {
+            return
+        }
+        self.postData.text = object
+        
     }
     
     func setUpData() {
         
-        self.commentViewModel.getComment(id: String(postData.id)) {
-            [weak self] response in
+        self.commentViewModel.getComment(id: String(postData.id)) { [weak self] response in
             DispatchQueue.main.async {
                 
                 self?.commentArray = response
                 self?.commentTableView.reloadData()
                 self?.commentLabel.text = response.count == 0 ? "댓글쓰기" : "댓글 \(response.count)"
-                //MARK: 댓글 테이블뷰 사이즈 조절
-                if response.count == 0  {
+                // MARK: 댓글 테이블뷰 사이즈 조절
+                if response.count == 0 {
                     
                     self?.resetTableViewContraints()
-                    self?.commentTableView.snp.makeConstraints{ make in
+                    self?.commentTableView.snp.makeConstraints { make in
                         make.height.equalTo(UIScreen.main.bounds.size.height - 300 )
                     }
                     
@@ -174,7 +175,7 @@ class PostDetailViewController : UIViewController {
                     
                     self?.resetTableViewContraints()
                     
-                    let tableViewHeight : Int = Int(UIScreen.main.bounds.size.height - 300)
+                    let tableViewHeight: Int = Int(UIScreen.main.bounds.size.height - 300)
                     var resultHeight = 0
                     
                     if tableViewHeight >= Int(100 * response.count + 50) {
@@ -203,9 +204,7 @@ class PostDetailViewController : UIViewController {
         self.createDateLabel.text = "\(dateFormatter.string(from: createDate))"
         self.titleTextLabel.text = "\(postData.text)"
 
-     
     }
-    
     
     func setUp() {
         
@@ -218,14 +217,13 @@ class PostDetailViewController : UIViewController {
         self.contentView.addSubview(mainTextView)
         self.contentView.addSubview(commentTableView)
         
-        [userNameLabel,createDateLabel,titleTextView,commentLabel,commentTextField].forEach {
+        [userNameLabel, createDateLabel, titleTextView, commentLabel, commentTextField].forEach {
             self.mainTextView.addSubview($0)
         }
         self.titleTextView.addSubview(titleTextLabel)
         self.contentView.addSubview(textView)
         self.textView.addSubview(commentTextField)
         self.textView.addSubview(addCommentButton)
-        
         
         navigationItem.rightBarButtonItem = updateBarButton
         let backBarButton = UIBarButtonItem(image: UIImage(systemName: "arrow.backward"), style: .plain, target: self, action: #selector(closeButtonClicked))
@@ -237,7 +235,6 @@ class PostDetailViewController : UIViewController {
      }
     
     func setUpConstraint() {
-        
         scrollView.snp.makeConstraints { make in
             make.edges.equalTo(self.view)
         }
@@ -267,7 +264,6 @@ class PostDetailViewController : UIViewController {
             make.bottom.equalTo(commentLabel).inset(30)
             make.height.greaterThanOrEqualTo(100)
         }
-        
         
         titleTextLabel.snp.makeConstraints { make in
 
@@ -325,7 +321,7 @@ class PostDetailViewController : UIViewController {
     @objc func ellipsisClicked(_ sender: UIBarButtonItem) {
         let userId = UserDefaults.standard.integer(forKey: "id")
         
-        //MARK: 사용권한
+        // MARK: 사용권한
         if userId != self.postData.user.id {
             self.view.makeToast("본인이 작성한 글만 수정할 수 있습니다.", duration: 1.0, position: .bottom)
             return
@@ -333,8 +329,8 @@ class PostDetailViewController : UIViewController {
         
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         let update = UIAlertAction(title: "수정", style: .default) { UIAlertAction in
-            let vc = PostUpdateViewController(postData: self.postData)
-            self.navigationController?.pushViewController(vc, animated: true)
+            let pvc = PostUpdateViewController(postData: self.postData)
+            self.navigationController?.pushViewController(pvc, animated: true)
         }
         
         let cancel = UIAlertAction(title: "닫기", style: .cancel, handler: nil)
@@ -354,11 +350,8 @@ class PostDetailViewController : UIViewController {
        self.present(alert, animated: true, completion: nil)
     }
     
-    // MARK
-    func resetTableViewContraints(){
-        
+    func resetTableViewContraints() {
         commentTableView.snp.removeConstraints()
-        
         commentTableView.snp.makeConstraints { make in
             make.top.equalTo(mainTextView.snp.bottom)
             make.leading.trailing.equalToSuperview()
@@ -366,12 +359,12 @@ class PostDetailViewController : UIViewController {
         }
     }
     
-    @objc func closeButtonClicked(){
+    @objc func closeButtonClicked() {
         self.navigationController?.popViewController(animated: true)
     }
 }
 
-extension PostDetailViewController : UITableViewDataSource, UITableViewDelegate {
+extension PostDetailViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return commentArray.count
@@ -393,11 +386,11 @@ extension PostDetailViewController : UITableViewDataSource, UITableViewDelegate 
         return cell
     }
     
-    func showAlert(data : CommentElement) {
+    func showAlert(data: CommentElement) {
         
         let userId = UserDefaults.standard.integer(forKey: "id")
         
-        //MARK: 사용권한
+        // MARK: 사용권한
         if userId != data.user.id  {
             self.view.makeToast("본인이 작성한 글만 수정할 수 있습니다.", duration: 1.0, position: .bottom)
             return
@@ -430,10 +423,9 @@ extension PostDetailViewController : UITableViewDataSource, UITableViewDelegate 
 
 }
 
-
 class PostDetailCell: UITableViewCell {
     
-    let nickNameLabel : UILabel = {
+    let nickNameLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.boldSystemFont(ofSize: 15)
         return label
@@ -446,21 +438,20 @@ class PostDetailCell: UITableViewCell {
         return label
     }()
     
-    lazy var updateButton : UIButton = {
+    lazy var updateButton: UIButton = {
         let button = UIButton()
-        button.setImage(UIImage(systemName: "ellipsis"),for: .normal )
+        button.setImage(UIImage(systemName: "ellipsis"), for: .normal )
         button.tintColor = .gray
         button.transform = CGAffineTransform(rotationAngle: -CGFloat.pi / 2)
         return button
     }()
-    
     
     var showAlertAction : (() -> ())?
     
     override init(style: UITableViewCell.CellStyle ,reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        [nickNameLabel,commentTextLabel,updateButton].forEach {
+        [nickNameLabel, commentTextLabel, updateButton].forEach {
             contentView.addSubview($0)
         }
         
@@ -483,24 +474,22 @@ class PostDetailCell: UITableViewCell {
         self.updateButton.addTarget(self, action: #selector(showAlertClicked), for: .touchUpInside)
     }
     
-    required init?(coder: NSCoder){
+    required init?(coder: NSCoder) {
         fatalError("init(coder: has not been implemented")
     }
     
-    @objc func showAlertClicked(){
+    @objc func showAlertClicked() {
         showAlertAction?()
     }
     
 }
 
-  
 extension PostDetailViewController {
     
     @objc private func adjustInputView(noti: Notification) {
         guard let userInfo = noti.userInfo else { return }
-        // TODO: 키보드 높이에 따른 인풋뷰 위치 변경
+
         guard let keyboardFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else { return }
-        
         
         if noti.name == UIResponder.keyboardWillShowNotification {
             let adjustmentHeight = keyboardFrame.height - view.safeAreaInsets.bottom

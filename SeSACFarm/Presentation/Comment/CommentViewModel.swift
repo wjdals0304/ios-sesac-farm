@@ -10,15 +10,13 @@ import Foundation
 
 class CommentViewModel {
     
-    var comment : Observable<[CommentElement]> = Observable([CommentElement(id: 0, comment: "", user: PostUser(id: 0, username: "", email: "", provider: "", confirmed: true, blocked: true, role: 0, createdAt: "", updatedAt: ""), post: PostComment(id: 0, text: "", user: 0, createdAt: "", updatedAt: ""), createdAt: "", updatedAt: "")])
+    var comment: Observable<[CommentElement]> = Observable([CommentElement(id: 0, comment: "", user: PostUser(id: 0, username: "", email: "", provider: "", confirmed: true, blocked: true, role: 0, createdAt: "", updatedAt: ""), post: PostComment(id: 0, text: "", user: 0, createdAt: "", updatedAt: ""), createdAt: "", updatedAt: "")])
     
-    var commentElement : Observable<CommentElement> = Observable(CommentElement(id: 0, comment: "", user: PostUser(id: 0, username: "", email: "", provider: "", confirmed: true, blocked: true, role: 0, createdAt: "", updatedAt: ""), post:PostComment(id: 0, text: "", user: 0, createdAt: "", updatedAt: ""), createdAt: "", updatedAt: ""))
+    var commentElement: Observable<CommentElement> = Observable(CommentElement(id: 0, comment: "", user: PostUser(id: 0, username: "", email: "", provider: "", confirmed: true, blocked: true, role: 0, createdAt: "", updatedAt: ""), post:PostComment(id: 0, text: "", user: 0, createdAt: "", updatedAt: ""), createdAt: "", updatedAt: ""))
     
-    
-    func getComment(id : String, completion: @escaping( [CommentElement] ) -> Void) {
+    func getComment(id: String, completion: @escaping( [CommentElement] ) -> Void) {
         
-        APIServiceComment.getComment(id: id ){ response, error in
-            
+        APIServiceComment.getComment(id: id) { response, error in
             self.comment.value = response
             completion(self.comment.value)
         }
@@ -37,10 +35,7 @@ class CommentViewModel {
         }
         
     }
-    
-    func updateComment( commentId : String, postId: String, comment: String, completion: @escaping(CommentElement) -> Void) {
-        
-        print(commentId, postId, comment)
+    func updateComment( commentId: String, postId: String, comment: String, completion: @escaping(CommentElement) -> Void) {
         APIServiceComment.updateComment(commentId: commentId, postId: postId, comment: comment) { response, error in
 
             guard let response = response else {
@@ -52,10 +47,8 @@ class CommentViewModel {
         }
     }
     
-    func deleteComment( commentId : String, completion: @escaping(CommentElement) -> Void) {
-        
+    func deleteComment(commentId: String, completion: @escaping(CommentElement) -> Void) {
         APIServiceComment.deleteComment(commentId: commentId) { response, error in
-            
             guard let response = response else {
                 return
             }
@@ -64,5 +57,4 @@ class CommentViewModel {
             completion(self.commentElement.value)
         }
     }
-    
 }

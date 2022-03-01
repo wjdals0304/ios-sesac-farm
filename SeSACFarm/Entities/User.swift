@@ -18,4 +18,3 @@ struct UserClass: Codable {
     let id: Int
     let username, email: String
 }
-

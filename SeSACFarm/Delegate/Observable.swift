@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 class Observable<T> {
     private var listener: ( (T) -> Void )?
  
@@ -27,4 +26,3 @@ class Observable<T> {
     }
     
 }
-

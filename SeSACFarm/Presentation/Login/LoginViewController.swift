@@ -8,11 +8,11 @@
 import UIKit
 import SnapKit
 
-class LoginViewController: UIViewController {
+final class LoginViewController: UIViewController {
     
-    let viewModel = LoginViewModel()
+    private let viewModel = LoginViewModel()
     
-    let emailText: UITextField = {
+    private let emailText: UITextField = {
         let email = UITextField()
         email.placeholder = "이메일 주소"
         email.layer.borderWidth = 1
@@ -20,7 +20,7 @@ class LoginViewController: UIViewController {
         email.layer.borderColor = UIColor().getCustomGray().cgColor
         return email
     }()
-    let passwordText: UITextField = {
+    private let passwordText: UITextField = {
         let password = UITextField()
         password.placeholder = "비밀번호"
         password.layer.borderWidth = 1
@@ -29,14 +29,14 @@ class LoginViewController: UIViewController {
         password.layer.borderColor = UIColor().getCustomGray().cgColor
         return password
     }()
-    let loginButton: UIButton = {
+    private let loginButton: UIButton = {
         let button = UIButton()
         button.setTitle("로그인", for: .normal)
         button.backgroundColor = UIColor().getCustomGreen()
         button.layer.cornerRadius = 8
         return button
     }()
-    let stackView: UIStackView = {
+    private let stackView: UIStackView = {
         let view = UIStackView()
         view.axis = .vertical
         view.spacing = 3
@@ -69,7 +69,7 @@ class LoginViewController: UIViewController {
         navigationItem.title = "새싹농장 로그인"
         
         self.view.addSubview(stackView)
-        [emailText,passwordText,loginButton].forEach {
+        [emailText, passwordText, loginButton].forEach {
             self.stackView.addArrangedSubview($0)
         }
     }

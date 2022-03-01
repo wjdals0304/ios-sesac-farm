@@ -7,11 +7,11 @@
 
 import UIKit
 
-class PostViewController: UIViewController {
+final class PostViewController: UIViewController {
     
-    let tableView = UITableView()
+    private let tableView = UITableView()
     
-    let addButton: UIButton = {
+    private lazy var addButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(systemName: "plus"), for: .normal)
         button.contentMode = .scaleAspectFit
@@ -25,7 +25,7 @@ class PostViewController: UIViewController {
     }()
     
     private var viewModel = PostViewModel()
-    private var postArray : [Post] = []
+    private var postArray: [Post] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,14 +33,12 @@ class PostViewController: UIViewController {
         view.backgroundColor = .white
         navigationItem.title = "새싹농장"
         
-
         setUpView()
         setUpViewConstraints()
         
         tableView.delegate = self
         tableView.dataSource = self
         tableView.register(PostCell.self, forCellReuseIdentifier: "PostCell")
-        // TODO: cell 높이 맞춰야함
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 200
         
@@ -81,25 +79,20 @@ class PostViewController: UIViewController {
     }
     
     @objc func addPostClicked() {
-        
-        let vc = PostUpdateViewController()
-        navigationController?.pushViewController(vc, animated: true)
+        let pvc = PostUpdateViewController()
+        navigationController?.pushViewController(pvc, animated: true)
     }
-    
     
 }
 
-
-extension PostViewController : UITableViewDelegate , UITableViewDataSource {
+extension PostViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return postArray.count
     }
     
-    
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-
         guard let cell = tableView.dequeueReusableCell(withIdentifier: "PostCell") as? PostCell else { return .init() }
         
         let data = postArray[indexPath.row]
@@ -128,28 +121,22 @@ extension PostViewController : UITableViewDelegate , UITableViewDataSource {
 
     }
         
-        
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
             
         let postData = postArray[indexPath.row]
-        let vc = PostDetailViewController(postData: postData)
-        
-        navigationController?.pushViewController(vc, animated: true)
-        
+        let pvc = PostDetailViewController(postData: postData)
+        navigationController?.pushViewController(pvc, animated: true)
     }
-   
-    
+
 }
-
-
-class PostCell : UITableViewCell {
+class PostCell: UITableViewCell {
     
     let nickNameLabel: UILabel = {
         let label = UILabel()
         label.backgroundColor = UIColor().getCustomGray()
         return label
     }()
-    let titleTextLabel : UILabel = {
+    let titleTextLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.lineBreakMode = .byWordWrapping
@@ -164,7 +151,7 @@ class PostCell : UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
-        [nickNameLabel,titleTextLabel,createDateLabel,lineView,commentWriteLabel].forEach {
+        [nickNameLabel, titleTextLabel, createDateLabel, lineView, commentWriteLabel].forEach {
             contentView.addSubview($0)
         }
         
@@ -195,21 +182,15 @@ class PostCell : UITableViewCell {
         
         lineView.backgroundColor = UIColor().getCustomGray()
         
-        
         commentWriteLabel.snp.makeConstraints { make in
             make.top.equalTo(lineView.snp.bottom).offset(10)
             make.leading.equalTo(titleTextLabel)
             make.bottom.equalToSuperview().inset(10)
-//            make.bottom.equalTo(self.contentView.snp.bottom).inset(5)
         }
-    
-        
-        
     }
-    
-    required init?(coder: NSCoder){
+
+    required init?(coder: NSCoder) {
         fatalError("init(coder: has not been implemented")
     }
-    
     
 }

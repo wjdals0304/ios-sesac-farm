@@ -12,21 +12,18 @@ class PostViewModel {
         
     var post: Observable<[Post]> = Observable([Post(id: 0, text: "", user: PostUser(id: 0, username: "", email: "", provider: "", confirmed: true, blocked: true, role: 0, createdAt: "", updatedAt: ""), createdAt: "", updatedAt: "", comments: [])])
     
-
-    var postElement : Observable<Post> = Observable(Post(id: 0, text: "", user: PostUser(id: 0, username: "", email: "", provider: "", confirmed: true, blocked: true, role: 0, createdAt: "", updatedAt: ""), createdAt: "", updatedAt: "", comments: []))
-    
+    var postElement: Observable<Post> = Observable(Post(id: 0, text: "", user: PostUser(id: 0, username: "", email: "", provider: "", confirmed: true, blocked: true, role: 0, createdAt: "", updatedAt: ""), createdAt: "", updatedAt: "", comments: []))
     
     func getPost(completion: @escaping( [Post] ) -> Void) {
         
-        APIServicePost.getPost { response , error in
+        APIServicePost.getPost { response, error in
             self.post.value = response
             completion(self.post.value)
         }
         
     }
     
-    
-    func savePost(text: String, completion: @escaping( Post ) -> Void){
+    func savePost(text: String, completion: @escaping( Post ) -> Void) {
         APIServicePost.savePost(text: text) { response, error in
             
             guard let response = response else {
@@ -39,7 +36,7 @@ class PostViewModel {
         }
     }
     
-    func updatePost(id: String, text: String ,completion: @escaping( Post ) -> Void ) {
+    func updatePost(id: String, text: String, completion: @escaping( Post ) -> Void ) {
         
         APIServicePost.updatePost(id: id, text: text) { response, error in
             
@@ -53,7 +50,7 @@ class PostViewModel {
         
     }
     
-    func deletePost(id:String, completion: @escaping( Post ) -> Void ){
+    func deletePost(id:String, completion: @escaping( Post ) -> Void ) {
         
         APIServicePost.deletePost(id: id) { response, error in
             
@@ -68,7 +65,4 @@ class PostViewModel {
         
     }
     
-     
-    
 }
-
