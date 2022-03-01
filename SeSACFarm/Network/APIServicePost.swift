@@ -5,198 +5,164 @@
 //  Created by 김정민 on 2022/01/05.
 //
 
-
 import Foundation
-
 
 class APIServicePost {
     
-    static func getPost( completion: @escaping ([Post],APIError?) -> Void) {
-    
-        let url = URL(string: "http://test.monocoding.com:1231/posts?_sort=created_at:desc")!
-    
-        var request = URLRequest(url: url)
+    static func getPost( completion: @escaping ([Post], APIError?) -> Void) {
+        var request = URLRequest(url: PostUrlEndpoint.getPost.url)
         request.httpMethod = "GET"
-        // string -> data,  dictionary -> Jsonserialization / codable
-        let jwt = UserDefaults.standard.object(forKey: "token") as! String        
+        let jwt = UserDefaults.token
         request.setValue("Bearer " + jwt, forHTTPHeaderField: "Authorization")
-        
         URLSession.shared.dataTask(with: request) { data, response, error in
             
             guard error == nil else {
-                completion([],.failed)
+                completion([], .failed)
                 return
             }
             
             guard let data = data else {
-                completion([],.noData)
+                completion([], .noData)
                 return
             }
             
             guard let response = response as? HTTPURLResponse else {
-                completion([],.invalidResponse)
+                completion([], .invalidResponse)
                 return
             }
  
             guard response.statusCode == 200 else {
-                completion([],.failed)
+                completion([], .failed)
                 return
             }
 
             do {
                 let decoder = JSONDecoder()
                 let postData = try decoder.decode([Post].self, from: data)
-                    completion(postData,nil)
+                    completion(postData, nil)
             } catch let error {
                 print("Got an error: \(error)")
-                completion([],.invalidData)
+                completion([], .invalidData)
             }
-            
-            
         }.resume()
     }
-    
-   
-    static func savePost(text: String ,completion: @escaping (Post?,APIError?) -> Void) {
-    
-        let url = URL(string: "http://test.monocoding.com:1231/posts")!
+    static func savePost(text: String, completion: @escaping (Post?, APIError?) -> Void) {
         let param =  "text=\(text)"
         let paramData = param.data(using: .utf8)
-        
-        var request = URLRequest(url: url)
+        var request = URLRequest(url: PostUrlEndpoint.savePost.url)
         request.httpMethod = "POST"
         request.httpBody = paramData
         // string -> data,  dictionary -> Jsonserialization / codable
-        let jwt = UserDefaults.standard.object(forKey: "token") as! String
+        let jwt = UserDefaults.token
         request.setValue("Bearer " + jwt, forHTTPHeaderField: "Authorization")
         
-        
         URLSession.shared.dataTask(with: request) { data, response, error in
-            
             guard error == nil else {
-                completion(nil,.failed)
+                completion(nil, .failed)
                 return
             }
             
             guard let data = data else {
-                completion(nil,.noData)
+                completion(nil, .noData)
                 return
             }
             
             guard let response = response as? HTTPURLResponse else {
-                completion(nil,.invalidResponse)
+                completion(nil, .invalidResponse)
                 return
             }
- 
             guard response.statusCode == 200 else {
-                completion(nil,.failed)
+                completion(nil, .failed)
                 return
             }
 
             do {
                 let decoder = JSONDecoder()
                 let postData = try decoder.decode(Post.self, from: data)
-                    completion(postData,nil)
+                    completion(postData, nil)
             } catch let error {
                 print("Got an error: \(error)")
-                completion(nil,.invalidData)
+                completion(nil, .invalidData)
             }
             
         }.resume()
     }
 
-    static func updatePost(id: String, text: String ,completion: @escaping (Post?,APIError?) -> Void) {
-    
-        let url = URL(string: "http://test.monocoding.com:1231/posts/\(id)")!
+    static func updatePost(id: String, text: String, completion: @escaping (Post?, APIError?) -> Void) {
         let param =  "text=\(text)"
         let paramData = param.data(using: .utf8)
-        
-        var request = URLRequest(url: url)
+        var request = URLRequest(url: PostUrlEndpoint.updatePost(id: id).url)
         request.httpMethod = "PUT"
         request.httpBody = paramData
         // string -> data,  dictionary -> Jsonserialization / codable
-        let jwt = UserDefaults.standard.object(forKey: "token") as! String
+        let jwt = UserDefaults.token
         request.setValue("Bearer " + jwt, forHTTPHeaderField: "Authorization")
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             
             guard error == nil else {
-                completion(nil,.failed)
+                completion(nil, .failed)
                 return
             }
             
             guard let data = data else {
-                completion(nil,.noData)
+                completion(nil, .noData)
                 return
             }
-            
             guard let response = response as? HTTPURLResponse else {
-                completion(nil,.invalidResponse)
+                completion(nil, .invalidResponse)
                 return
             }
- 
             guard response.statusCode == 200 else {
-                completion(nil,.failed)
+                completion(nil, .failed)
                 return
             }
 
             do {
                 let decoder = JSONDecoder()
                 let postData = try decoder.decode(Post.self, from: data)
-                    completion(postData,nil)
+                    completion(postData, nil)
             } catch let error {
                 print("Got an error: \(error)")
-                completion(nil,.invalidData)
+                completion(nil, .invalidData)
             }
             
         }.resume()
     }
-    
-    
     static func deletePost(id: String ,completion: @escaping (Post?,APIError?) -> Void) {
-    
-        let url = URL(string: "http://test.monocoding.com:1231/posts/\(id)")!
-        
-        var request = URLRequest(url: url)
+        var request = URLRequest(url: PostUrlEndpoint.deletePost(id: id).url)
         request.httpMethod = "DELETE"
         // string -> data,  dictionary -> Jsonserialization / codable
-        let jwt = UserDefaults.standard.object(forKey: "token") as! String
+        let jwt = UserDefaults.token
         request.setValue("Bearer " + jwt, forHTTPHeaderField: "Authorization")
         request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-        
         URLSession.shared.dataTask(with: request) { data, response, error in
-            
             guard error == nil else {
-                completion(nil,.failed)
+                completion(nil, .failed)
                 return
             }
-            
             guard let data = data else {
-                completion(nil,.noData)
+                completion(nil, .noData)
                 return
             }
-            
             guard let response = response as? HTTPURLResponse else {
-                completion(nil,.invalidResponse)
+                completion(nil, .invalidResponse)
                 return
             }
- 
             guard response.statusCode == 200 else {
-                completion(nil,.failed)
+                completion(nil, .failed)
                 return
             }
 
             do {
                 let decoder = JSONDecoder()
                 let postData = try decoder.decode(Post.self, from: data)
-                    completion(postData,nil)
+                    completion(postData, nil)
             } catch let error {
                 print("Got an error: \(error)")
-                completion(nil,.invalidData)
+                completion(nil, .invalidData)
             }
-            
         }.resume()
     }
 }
-
